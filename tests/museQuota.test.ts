@@ -180,3 +180,12 @@ describe('Muse quota page wiring', () => {
     expect(QUOTA_TAB_ORDER).toContain('muse');
   });
 });
+
+describe('Muse empty-payload guard', () => {
+  test('degenerate bodies without windows or identity still error', async () => {
+    const { parseMuseKeyPayload } = await import('../src/utils/quota/muse');
+    expect(parseMuseKeyPayload({})).toBeNull();
+    expect(parseMuseKeyPayload({ is_subs_active: true })).toBeNull();
+    expect(parseMuseKeyPayload({ subs_usage: null })).toBeNull();
+  });
+});

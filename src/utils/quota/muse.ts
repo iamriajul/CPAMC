@@ -120,7 +120,8 @@ export function parseMuseKeyPayload(payload: unknown): MuseQuotaData | null {
   if (!root) return null;
   const usage = asRecord(root.subs_usage);
   const windows: MuseQuotaWindow[] = [];
-  if (usage) {    const rollingRaw = asRecord(usage.window) as MuseUsageWindow | null;
+  if (usage) {
+    const rollingRaw = asRecord(usage.window) as MuseUsageWindow | null;
     const rollingMinutes = toFiniteNumber(rollingRaw?.window_duration_mins);
     const rolling = toWindow(
       rollingMinutes !== null && rollingMinutes > 0 ? `${Math.round(rollingMinutes)}m` : 'rolling',
@@ -142,13 +143,19 @@ export function parseMuseKeyPayload(payload: unknown): MuseQuotaData | null {
   // active subscriptions, and the tier/identity below is still worth showing.
   const tierRaw = root.subs_tier_name ?? root.subs_tier_id;
   const emailRaw = root.user_email;
+  const tier =
+    typeof tierRaw === 'string' && tierRaw.trim() ? tierRaw.trim() : undefined;
+  const email =
+    typeof emailRaw === 'string' && emailRaw.trim()
+      ? emailRaw.trim().toLowerCase()
+      : undefined;
+  // A body with no windows and no identity is degenerate (e.g. an empty
+  // object), not a windowless subscription — keep erroring on those.
+  if (windows.length === 0 && tier === undefined && email === undefined) return null;
   return {
     active: root.is_subs_active !== false,
-    tier: typeof tierRaw === 'string' && tierRaw.trim() ? tierRaw.trim() : undefined,
-    email:
-      typeof emailRaw === 'string' && emailRaw.trim()
-        ? emailRaw.trim().toLowerCase()
-        : undefined,
+    tier,
+    email,
     windows,
   };
 }
