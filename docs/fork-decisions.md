@@ -38,3 +38,18 @@ bun test tests/museOAuth.test.ts
 grep -q "id: 'muse'" src/pages/OAuthPage.tsx
 grep -q "muse_oauth_title" src/i18n/locales/en.json
 ```
+
+## muse-quota
+
+**Muse subscription usage panel (rolling + weekly windows)**
+
+Quota page, auth-file cards, and timeline lanes cover muse files via a
+dedicated adapter: the key endpoint is proxied through the backend api-call
+with the stored account token (empty probe body, no re-onboarding), and only
+percent/tier/identity fields are kept — the minted api_key is never stored or
+rendered. 429s surface a retry-later message instead of a raw error.
+
+```bash
+grep -q "muse: { ...MUSE_CONFIG" src/features/quota/providers/index.ts
+bun test tests/museQuota.test.ts
+```
