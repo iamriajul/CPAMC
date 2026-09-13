@@ -11,6 +11,7 @@ export const QUOTA_TAB_ORDER: readonly QuotaProviderType[] = [
   'copilot',
   'meta',
   'plugin',
+  'muse',
 ];
 
 export type QuotaTabId = 'all' | QuotaProviderType;

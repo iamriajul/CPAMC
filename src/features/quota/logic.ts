@@ -12,6 +12,7 @@ import { KIMI_CONFIG } from './providers/kimi/data';
 import { COPILOT_CONFIG } from './providers/copilot/data';
 import { META_CONFIG } from './providers/meta/data';
 import { PLUGIN_CONFIG } from './providers/plugin/data';
+import { MUSE_CONFIG } from './providers/muse/data';
 import { XAI_CONFIG } from './providers/xai/data';
 import type { QuotaProviderType } from './providers/types';
 import { QUOTA_TAB_ORDER, type QuotaSortMode, type QuotaTabId } from './constants';
@@ -25,6 +26,7 @@ const QUOTA_FILTER_MAP: Record<QuotaProviderType, (file: AuthFileItem) => boolea
   copilot: COPILOT_CONFIG.filterFn,
   meta: META_CONFIG.filterFn,
   plugin: PLUGIN_CONFIG.filterFn,
+  muse: MUSE_CONFIG.filterFn,
   xai: XAI_CONFIG.filterFn,
 };
 
