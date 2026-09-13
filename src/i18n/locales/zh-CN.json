@@ -490,6 +490,25 @@
     "limit_index": "限额 #{{index}}",
     "reset_hint": "{{hint}} 后重置"
   },
+  "muse_quota": {
+    "title": "Muse 额度",
+    "empty_title": "暂无 Muse 认证",
+    "empty_desc": "使用 Muse 登录后即可查看订阅用量。",
+    "idle": "点击此处刷新额度",
+    "loading": "正在加载额度...",
+    "load_failed": "额度获取失败：{{message}}",
+    "missing_auth_index": "认证文件缺少 auth_index",
+    "empty_data": "暂无额度数据",
+    "refresh_button": "刷新额度",
+    "fetch_all": "获取全部",
+    "weekly": "周用量",
+    "rolling_window": "滚动窗口",
+    "rolling_window_hours": "滚动窗口（{{count}} 小时）",
+    "rolling_window_minutes": "滚动窗口（{{count}} 分钟）",
+    "subscription_tier": "订阅档位：{{tier}}",
+    "rate_limited": "Meta 限制了额度查询频率，请稍后再试",
+    "inactive_subscription": "Muse 订阅未激活"
+  },
   "xai_quota": {
     "title": "Grok 额度",
     "empty_title": "暂无 xAI/Grok 认证",
