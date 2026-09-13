@@ -14,6 +14,7 @@ import type {
   KimiQuotaState,
   CopilotQuotaState,
   MetaQuotaState,
+  MuseQuotaState,
   PluginQuotaState,
   XaiQuotaState,
 } from '@/types';
@@ -37,6 +38,7 @@ interface QuotaStoreState {
   kimiQuota: Record<string, KimiQuotaState>;
   copilotQuota: Record<string, CopilotQuotaState>;
   metaQuota: Record<string, MetaQuotaState>;
+  museQuota: Record<string, MuseQuotaState>;
   pluginQuota: Record<string, PluginQuotaState>;
   xaiQuota: Record<string, XaiQuotaState>;
   setCodexCreditOverage: (key: string, entry: CodexCreditOverageEntry | undefined) => void;
@@ -77,6 +79,7 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
   copilotQuota: {},
   metaQuota: {},
   pluginQuota: {},
+  museQuota: {},
   xaiQuota: {},
   setCodexCreditOverage: (key, entry) =>
     set((state) => {
@@ -186,6 +189,7 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
           copilotQuota: omitNames(state.copilotQuota),
           metaQuota: omitNames(state.metaQuota),
           pluginQuota: omitNames(state.pluginQuota),
+          museQuota: omitNames(state.museQuota),
           xaiQuota: omitNames(state.xaiQuota),
         };
       }
@@ -201,9 +205,9 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
         copilotQuota: {},
         metaQuota: {},
         pluginQuota: {},
+        museQuota: {},
         xaiQuota: {},
       };
-    }),
 }));
 
 export const captureQuotaCacheGeneration = (name?: string) => {

@@ -53,6 +53,7 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     if (quotaType === 'copilot') return state.copilotQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'meta') return state.metaQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'plugin') return state.pluginQuota[cacheKey] as QuotaCardState | undefined;
+    if (quotaType === 'muse') return state.museQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'xai') return state.xaiQuota[cacheKey] as QuotaCardState | undefined;
     return assertNever(quotaType);
   });
