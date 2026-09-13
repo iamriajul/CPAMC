@@ -4,6 +4,9 @@ const OAUTH_PROVIDER_ALIASES: Record<string, string> = {
   muse: 'meta',
   'x-ai': 'xai',
   'x.ai': 'xai',
+  'muse-code': 'muse',
+  muse_code: 'muse',
+  musecode: 'muse',
 };
 
 const MANAGEMENT_OAUTH_PROVIDER_PATTERN = /^[a-z0-9-]+$/;
