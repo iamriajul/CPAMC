@@ -18,7 +18,8 @@ export type BuiltInOAuthProvider =
   | 'devin'
   | 'meta'
   | 'copilot'
-  | 'muse';
+  | 'muse'
+  | 'zai';
 
 export interface OAuthStartResponse {
   url: string;
