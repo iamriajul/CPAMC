@@ -626,7 +626,8 @@ export function OAuthPage() {
     }
   };
 
-  const handleOpencodeImport = async () => {    const apiKey = opencodeState.apiKey.trim();
+  const handleOpencodeImport = async () => {
+    const apiKey = opencodeState.apiKey.trim();
     if (!apiKey) {
       const message = t('opencode_import.key_required');
       setOpencodeState((prev) => ({ ...prev, error: message }));
@@ -655,7 +656,7 @@ export function OAuthPage() {
     }
   };
 
-    const handleZaiImport = async () => {
+  const handleZaiImport = async () => {
     const apiKey = zaiImportState.apiKey.trim();
     if (!apiKey) {
       const message = t('zai_import.key_required');
@@ -904,7 +905,9 @@ export function OAuthPage() {
                 }
                 placeholder={t('zai_import.key_placeholder')}
               />
-              {zaiImportState.error && <div className="status-badge error">{zaiImportState.error}</div>}
+              {zaiImportState.error && (
+                <div className="status-badge error">{zaiImportState.error}</div>
+              )}
               {zaiImportState.result?.authFile && (
                 <div className={styles.connectionBox}>
                   <div className={styles.connectionLabel}>{t('zai_import.result_title')}</div>
@@ -963,7 +966,9 @@ export function OAuthPage() {
                 }
                 placeholder={t('opencode_import.base_url_placeholder')}
               />
-              {opencodeState.error && <div className="status-badge error">{opencodeState.error}</div>}
+              {opencodeState.error && (
+                <div className="status-badge error">{opencodeState.error}</div>
+              )}
               {opencodeState.result?.authFile && (
                 <div className={styles.connectionBox}>
                   <div className={styles.connectionLabel}>{t('opencode_import.result_title')}</div>
