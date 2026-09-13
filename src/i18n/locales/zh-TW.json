@@ -567,6 +567,25 @@
     "limit_index": "限額 #{{index}}",
     "reset_hint": "{{hint}} 後重置"
   },
+  "muse_quota": {
+    "title": "Muse 配額",
+    "empty_title": "暫無 Muse 驗證",
+    "empty_desc": "使用 Muse 登入後即可查看訂閱用量。",
+    "idle": "點擊此處重新整理配額",
+    "loading": "正在載入配額...",
+    "load_failed": "配額取得失敗：{{message}}",
+    "missing_auth_index": "驗證檔案缺少 auth_index",
+    "empty_data": "暫無配額資料",
+    "refresh_button": "重新整理配額",
+    "fetch_all": "取得全部",
+    "weekly": "週用量",
+    "rolling_window": "滾動視窗",
+    "rolling_window_hours": "滾動視窗（{{count}} 小時）",
+    "rolling_window_minutes": "滾動視窗（{{count}} 分鐘）",
+    "subscription_tier": "訂閱等級：{{tier}}",
+    "rate_limited": "Meta 限制了配額查詢頻率，請稍後再試",
+    "inactive_subscription": "Muse 訂閱未啟用"
+  },
   "xai_quota": {
     "title": "Grok 配額",
     "empty_title": "暫無 xAI/Grok 驗證",

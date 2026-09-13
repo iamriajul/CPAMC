@@ -572,6 +572,25 @@
     "limit_index": "Лимит #{{index}}",
     "reset_hint": "сброс через {{hint}}"
   },
+  "muse_quota": {
+    "title": "Квота Muse",
+    "empty_title": "Файлы авторизации Muse отсутствуют",
+    "empty_desc": "Войдите через Muse, чтобы увидеть использование подписки.",
+    "idle": "Не загружено. Нажмите «Обновить квоту».",
+    "loading": "Загрузка квоты...",
+    "load_failed": "Не удалось загрузить квоту: {{message}}",
+    "missing_auth_index": "В файле авторизации отсутствует auth_index",
+    "empty_data": "Данные по квоте отсутствуют",
+    "refresh_button": "Обновить квоту",
+    "fetch_all": "Получить все",
+    "weekly": "За неделю",
+    "rolling_window": "Скользящее окно",
+    "rolling_window_hours": "Скользящее окно ({{count}} ч)",
+    "rolling_window_minutes": "Скользящее окно ({{count}} мин)",
+    "subscription_tier": "Подписка: {{tier}}",
+    "rate_limited": "Meta ограничила частоту проверки квоты; повторите позже",
+    "inactive_subscription": "Подписка Muse неактивна"
+  },
   "xai_quota": {
     "title": "Квота Grok",
     "empty_title": "Файлы авторизации xAI/Grok отсутствуют",
