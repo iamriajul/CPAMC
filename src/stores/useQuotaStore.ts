@@ -11,7 +11,26 @@ import type {
   DevinQuotaState,
   KimiQuotaState,
   MetaQuotaState,
+  MuseQuotaState,
+  OpenCodeGoQuotaState,
+  XaiQuotaState,
+  ZaiQuotaState,
+} from '@/types';
+
+type QuotaUpdater<T> = T | ((prev: T) => T);
+
+interface QuotaStoreState {
+  cacheGeneration: number;
+  fileGenerations: Record<string, number>;
+  antigravityQuota: Record<string, AntigravityQuotaState>;
+  claudeQuota: Record<string, ClaudeQuotaState>;
+  codexQuota: Record<string, CodexQuotaState>;
+  devinQuota: Record<string, DevinQuotaState>;
+  kimiQuota: Record<string, KimiQuotaState>;
+  metaQuota: Record<string, MetaQuotaState>;
   museQuota: Record<string, MuseQuotaState>;
+  opencodeQuota: Record<string, OpenCodeGoQuotaState>;
+  zaiQuota: Record<string, ZaiQuotaState>;
   xaiQuota: Record<string, XaiQuotaState>;
   setAntigravityQuota: (updater: QuotaUpdater<Record<string, AntigravityQuotaState>>) => void;
   setClaudeQuota: (updater: QuotaUpdater<Record<string, ClaudeQuotaState>>) => void;
@@ -19,7 +38,31 @@ import type {
   setDevinQuota: (updater: QuotaUpdater<Record<string, DevinQuotaState>>) => void;
   setKimiQuota: (updater: QuotaUpdater<Record<string, KimiQuotaState>>) => void;
   setMetaQuota: (updater: QuotaUpdater<Record<string, MetaQuotaState>>) => void;
+  setMuseQuota: (updater: QuotaUpdater<Record<string, MuseQuotaState>>) => void;
+  setOpencodeQuota: (updater: QuotaUpdater<Record<string, OpenCodeGoQuotaState>>) => void;
+  setZaiQuota: (updater: QuotaUpdater<Record<string, ZaiQuotaState>>) => void;
+  setXaiQuota: (updater: QuotaUpdater<Record<string, XaiQuotaState>>) => void;
+  clearQuotaCache: (names?: string[]) => void;
+}
+
+const resolveUpdater = <T>(updater: QuotaUpdater<T>, prev: T): T => {
+  if (typeof updater === 'function') {
+    return (updater as (value: T) => T)(prev);
+  }
+  return updater;
+};
+
+export const useQuotaStore = create<QuotaStoreState>((set) => ({
+  cacheGeneration: 0,
+  fileGenerations: {},
+  antigravityQuota: {},
+  claudeQuota: {},
+  codexQuota: {},
+  devinQuota: {},
+  kimiQuota: {},
   museQuota: {},
+  opencodeQuota: {},
+  zaiQuota: {},
   xaiQuota: {},
   setAntigravityQuota: (updater) =>
     set((state) => ({
@@ -43,7 +86,52 @@ import type {
     })),
   setMetaQuota: (updater) =>
     set((state) => ({ metaQuota: resolveUpdater(updater, state.metaQuota) })),
+  setMuseQuota: (updater) =>
+    set((state) => ({
+      museQuota: resolveUpdater(updater, state.museQuota),
+    })),
+  setOpencodeQuota: (updater) =>
+    set((state) => ({
+      opencodeQuota: resolveUpdater(updater, state.opencodeQuota),
+    })),
+  setZaiQuota: (updater) =>
+    set((state) => ({
+      zaiQuota: resolveUpdater(updater, state.zaiQuota),
+    })),
+  setXaiQuota: (updater) =>
+    set((state) => ({
+      xaiQuota: resolveUpdater(updater, state.xaiQuota),
+    })),
+  clearQuotaCache: (names) =>
+    set((state) => {
+      if (names) {
+        if (names.length === 0) return state;
+        const fileGenerations = { ...state.fileGenerations };
+        names.forEach((name) => {
+          fileGenerations[name] = (fileGenerations[name] ?? 0) + 1;
+        });
+        const invalidatedNames = new Set(names);
+        const omitNames = <T>(cache: Record<string, T>): Record<string, T> => {
+          const keysToDelete = Object.keys(cache).filter((key) =>
+            invalidatedNames.has(getQuotaCacheFileName(key))
+          );
+          if (keysToDelete.length === 0) return cache;
+          const next = { ...cache };
+          keysToDelete.forEach((key) => delete next[key]);
+          return next;
+        };
+        return {
+          fileGenerations,
+          antigravityQuota: omitNames(state.antigravityQuota),
+          claudeQuota: omitNames(state.claudeQuota),
+          codexQuota: omitNames(state.codexQuota),
+          devinQuota: omitNames(state.devinQuota),
+          kimiQuota: omitNames(state.kimiQuota),
+          metaQuota: omitNames(state.metaQuota),
           museQuota: omitNames(state.museQuota),
+          museQuota: omitNames(state.museQuota),
+          opencodeQuota: omitNames(state.opencodeQuota),
+          zaiQuota: omitNames(state.zaiQuota),
           xaiQuota: omitNames(state.xaiQuota),
         };
       }
@@ -57,8 +145,11 @@ import type {
         kimiQuota: {},
         metaQuota: {},
         museQuota: {},
+        opencodeQuota: {},
+        zaiQuota: {},
         xaiQuota: {},
       };
+    }),
 }));
 
 export const captureQuotaCacheGeneration = (name?: string) => {
