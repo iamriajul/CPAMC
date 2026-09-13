@@ -8,6 +8,8 @@ export type AuthFileType =
   | 'qwen'
   | 'kimi'
   | 'muse'
+  | 'opencode'
+  | 'zai'
   | 'gemini'
   | 'aistudio'
   | 'claude'
