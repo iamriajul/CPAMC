@@ -568,8 +568,8 @@ export function buildTimelineLane(input: TimelineLaneInput): TimelineLane {
     };
   }
 
-  if (provider === 'muse') {
-    // Muse rows share Kimi's shape; used/limit are already percentages.
+  if (provider === 'muse' || provider === 'opencode' || provider === 'zai') {
+    // Percent-based rows with reset instants; remaining is derived.
     const rows = ((quota as { rows?: KimiRowLike[] }).rows ?? []).filter(
       (row) => typeof row.resetAtMs === 'number'
     );
