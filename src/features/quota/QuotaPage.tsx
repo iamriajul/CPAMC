@@ -147,6 +147,7 @@ export function QuotaPage() {
   const copilotQuota = useQuotaStore((state) => state.copilotQuota);
   const metaQuota = useQuotaStore((state) => state.metaQuota);
   const pluginQuota = useQuotaStore((state) => state.pluginQuota);
+  const museQuota = useQuotaStore((state) => state.museQuota);
   const xaiQuota = useQuotaStore((state) => state.xaiQuota);
 
   const quotaByType = useMemo<Record<QuotaProviderType, Record<string, QuotaCardState>>>(
@@ -160,8 +161,12 @@ export function QuotaPage() {
         copilot: copilotQuota,
         meta: metaQuota,
         plugin: pluginQuota,
+        muse: museQuota,
         xai: xaiQuota,
-      }) as unknown as Record<QuotaProviderType, Record<string, QuotaCardState>>,
+        // satisfies (not a cast): adding a provider to QuotaProviderType
+        // without wiring its map here fails type-check instead of crashing
+        // the page at runtime reading [file.name] off undefined.
+      }) satisfies Record<QuotaProviderType, Record<string, QuotaCardState>>,
     [
       antigravityQuota,
       claudeQuota,
@@ -170,6 +175,7 @@ export function QuotaPage() {
       kimiQuota,
       copilotQuota,
       metaQuota,
+      museQuota,
       pluginQuota,
       xaiQuota,
     ]
