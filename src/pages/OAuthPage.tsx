@@ -279,10 +279,12 @@ const buildZaiCallbackUrl = (input: string, state?: string): string | null => {
   if (params) {
     const code = params.get('code')?.trim();
     const error = params.get('error')?.trim();
+    const errorDescription = params.get('error_description')?.trim();
     const callbackUrl = new URL(ZAI_CALLBACK_URL);
     callbackUrl.searchParams.set('state', callbackState);
     if (code) callbackUrl.searchParams.set('code', code);
     if (error) callbackUrl.searchParams.set('error', error);
+    if (errorDescription) callbackUrl.searchParams.set('error_description', errorDescription);
     return callbackUrl.toString();
   }
 
