@@ -21,9 +21,12 @@ import {
 import { normalizeAuthIndex } from '@/utils/authIndex';
 import type { QuotaProviderData } from '../types';
 
-const toRows = (data: MuseQuotaData): MuseQuotaRow[] =>
+const toRows = (data: MuseQuotaData, t: TFunction): MuseQuotaRow[] =>
   data.windows.map((window) => ({
     id: window.id,
+    // The timeline lane renders row.label with key={label}: resolve it here so
+    // every limit has a translated, unique label (labelKey alone renders blank).
+    label: t(window.labelKey, (window.labelParams ?? {}) as Record<string, string | number>),
     labelKey: window.labelKey,
     labelParams: window.labelParams,
     used: window.usedPercent,
@@ -67,7 +70,7 @@ const fetchMuseQuota = async (
     throw new Error(t('muse_quota.inactive_subscription'));
   }
 
-  return { rows: toRows(parsed), tier: parsed.tier, email: parsed.email };
+  return { rows: toRows(parsed, t), tier: parsed.tier, email: parsed.email };
 };
 
 export const MUSE_CONFIG: QuotaProviderData<MuseQuotaState, Awaited<ReturnType<typeof fetchMuseQuota>>> = {

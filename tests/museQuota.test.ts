@@ -6,6 +6,7 @@ import {
 } from '../src/utils/quota/muse';
 import { isMuseFile, resolveAuthProvider } from '../src/utils/quota/validators';
 import { QUOTA_ADAPTERS } from '../src/features/quota/providers';
+import { buildTimelineLane } from '../src/features/quota/quotaTimelineModel';
 import en from '../src/i18n/locales/en.json';
 
 const keyResponse = (overrides: Record<string, unknown> = {}) => ({
@@ -92,8 +93,7 @@ describe('Muse quota wiring', () => {
     expect(MUSE_REQUEST_HEADERS.Authorization).toContain('$TOKEN$');
   });
 
-  test('provides muse_quota translations', () => {
-    const authLogin = (
+  test('provides muse_quota translations', () => {    const authLogin = (
       en as unknown as Record<string, Record<string, string>>
     ).muse_quota;
     for (const key of [
@@ -108,5 +108,42 @@ describe('Muse quota wiring', () => {
     ]) {
       expect(authLogin[key]?.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('Muse timeline lane', () => {
+  test('renders translated, unique limit labels', () => {
+    const lane = buildTimelineLane({
+      name: 'muse.json',
+      displayName: 'muse@example.com',
+      provider: 'muse',
+      quota: {
+        status: 'success',
+        rows: [
+          {
+            id: '300m',
+            label: 'Rolling window (5h)',
+            labelKey: 'muse_quota.rolling_window_hours',
+            used: 12.5,
+            limit: 100,
+            resetAtMs: Date.now() + 3600_000,
+            periodHours: 5,
+          },
+          {
+            id: '1w',
+            label: 'Weekly',
+            labelKey: 'muse_quota.weekly',
+            used: 34,
+            limit: 100,
+            resetAtMs: Date.now() + 86400_000,
+            periodHours: 168,
+          },
+        ],
+      },
+    });
+    expect(lane.limits.length).toBe(2);
+    const labels = lane.limits.map((limit) => limit.label);
+    expect(labels.every((label) => label.trim().length > 0)).toBeTrue();
+    expect(new Set(labels).size).toBe(labels.length);
   });
 });

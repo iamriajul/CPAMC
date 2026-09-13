@@ -401,6 +401,8 @@ export interface XaiQuotaState {
 // Muse subscription quota rows (percent-based windows from the key endpoint)
 export interface MuseQuotaRow {
   id: string;
+  /** Translated display label (timeline lanes key on this — must be unique). */
+  label?: string;
   labelKey: string;
   labelParams?: Record<string, string | number>;
   used: number;
