@@ -134,6 +134,8 @@ export function QuotaPage() {
   const metaQuota = useQuotaStore((state) => state.metaQuota);
   const pluginQuota = useQuotaStore((state) => state.pluginQuota);
   const museQuota = useQuotaStore((state) => state.museQuota);
+  const opencodeQuota = useQuotaStore((state) => state.opencodeQuota);
+  const zaiQuota = useQuotaStore((state) => state.zaiQuota);
   const xaiQuota = useQuotaStore((state) => state.xaiQuota);
 
   const quotaByType = useMemo<Record<QuotaProviderType, Record<string, QuotaCardState>>>(
@@ -147,6 +149,8 @@ export function QuotaPage() {
         meta: metaQuota,
         plugin: pluginQuota,
         muse: museQuota,
+        opencode: opencodeQuota,
+        zai: zaiQuota,
         xai: xaiQuota,
         // satisfies (not a cast): adding a provider to QuotaProviderType
         // without wiring its map here fails type-check instead of crashing
@@ -160,6 +164,8 @@ export function QuotaPage() {
       kimiQuota,
       metaQuota,
       museQuota,
+      opencodeQuota,
+      zaiQuota,
       pluginQuota,
       xaiQuota,
     ]
