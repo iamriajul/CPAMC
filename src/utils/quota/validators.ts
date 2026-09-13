@@ -3,6 +3,7 @@
  */
 
 import type { AuthFileItem } from '@/types';
+import { normalizeOAuthProviderKey } from '@/utils/providerKeys';
 
 export function resolveAuthProvider(file: AuthFileItem): string {
   const raw = file.provider ?? file.type ?? '';
@@ -10,7 +11,7 @@ export function resolveAuthProvider(file: AuthFileItem): string {
   if (key === 'x-ai' || key === 'grok') return 'xai';
   // Kimi International (kimi.ai) accounts share Kimi's quota API on another host.
   if (key === 'kimi-ai') return 'kimi';
-  return key;
+  return normalizeOAuthProviderKey(String(raw));
 }
 
 export function isAntigravityFile(file: AuthFileItem): boolean {
