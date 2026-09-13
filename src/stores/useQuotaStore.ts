@@ -11,6 +11,7 @@ import type {
   DevinQuotaState,
   KimiQuotaState,
   MetaQuotaState,
+  MuseQuotaState,
   PluginQuotaState,
   XaiQuotaState,
 } from '@/types';
@@ -26,6 +27,7 @@ interface QuotaStoreState {
   devinQuota: Record<string, DevinQuotaState>;
   kimiQuota: Record<string, KimiQuotaState>;
   metaQuota: Record<string, MetaQuotaState>;
+  museQuota: Record<string, MuseQuotaState>;
   pluginQuota: Record<string, PluginQuotaState>;
   xaiQuota: Record<string, XaiQuotaState>;
   setAntigravityQuota: (updater: QuotaUpdater<Record<string, AntigravityQuotaState>>) => void;
@@ -56,6 +58,7 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
   kimiQuota: {},
   metaQuota: {},
   pluginQuota: {},
+  museQuota: {},
   xaiQuota: {},
   setAntigravityQuota: (updater) =>
     set((state) => ({
@@ -114,6 +117,7 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
           kimiQuota: omitNames(state.kimiQuota),
           metaQuota: omitNames(state.metaQuota),
           pluginQuota: omitNames(state.pluginQuota),
+          museQuota: omitNames(state.museQuota),
           xaiQuota: omitNames(state.xaiQuota),
         };
       }
@@ -127,9 +131,9 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
         kimiQuota: {},
         metaQuota: {},
         pluginQuota: {},
+        museQuota: {},
         xaiQuota: {},
       };
-    }),
 }));
 
 export const captureQuotaCacheGeneration = (name?: string) => {
