@@ -444,3 +444,46 @@ export interface MuseQuotaState {
   error?: string;
   errorStatus?: number;
 }
+
+// OpenCode Zen Go quota rows (percent-based 5h / weekly / monthly windows)
+export interface OpenCodeGoQuotaRow {
+  id: string;
+  /** Translated display label (timeline lanes key on this — must be unique). */
+  label?: string;
+  labelKey: string;
+  used: number;
+  limit: number;
+  /** Reset instant in epoch ms. */
+  resetAtMs?: number | null;
+  /** Window length in hours when known (monthly has none). */
+  periodHours?: number | null;
+}
+
+export interface OpenCodeGoQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  rows: OpenCodeGoQuotaRow[];
+  error?: string;
+  errorStatus?: number;
+}
+
+// Z.AI GLM Coding Plan quota rows (percent-based 5h / weekly windows)
+export interface ZaiQuotaRow {
+  id: string;
+  /** Translated display label (timeline lanes key on this — must be unique). */
+  label?: string;
+  labelKey: string;
+  used: number;
+  limit: number;
+  /** Reset instant in epoch ms; null when the window reports no timestamp. */
+  resetAtMs?: number | null;
+  /** Window length in hours. */
+  periodHours?: number | null;
+}
+
+export interface ZaiQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  rows: ZaiQuotaRow[];
+  tier?: string;
+  error?: string;
+  errorStatus?: number;
+}

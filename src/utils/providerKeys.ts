@@ -6,6 +6,11 @@ const OAUTH_PROVIDER_ALIASES: Record<string, string> = {
   'muse-code': 'muse',
   muse_code: 'muse',
   musecode: 'muse',
+  'opencode-go': 'opencode',
+  opencode_go: 'opencode',
+  'zai-coding-plan': 'zai',
+  zhipu: 'zai',
+  glm: 'zai',
 };
 
 const MANAGEMENT_OAUTH_PROVIDER_PATTERN = /^[a-z0-9-]+$/;

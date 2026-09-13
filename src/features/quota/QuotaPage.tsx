@@ -128,6 +128,8 @@ export function QuotaPage() {
   const devinQuota = useQuotaStore((state) => state.devinQuota);
   const kimiQuota = useQuotaStore((state) => state.kimiQuota);
   const museQuota = useQuotaStore((state) => state.museQuota);
+  const opencodeQuota = useQuotaStore((state) => state.opencodeQuota);
+  const zaiQuota = useQuotaStore((state) => state.zaiQuota);
   const xaiQuota = useQuotaStore((state) => state.xaiQuota);
 
   const quotaByType = useMemo<Record<QuotaProviderType, Record<string, QuotaCardState>>>(
@@ -139,12 +141,14 @@ export function QuotaPage() {
         devin: devinQuota,
         kimi: kimiQuota,
         muse: museQuota,
+        opencode: opencodeQuota,
+        zai: zaiQuota,
         xai: xaiQuota,
         // satisfies (not a cast): adding a provider to QuotaProviderType
         // without wiring its map here fails type-check instead of crashing
         // the page at runtime reading [file.name] off undefined.
       }) satisfies Record<QuotaProviderType, Record<string, QuotaCardState>>,
-    [antigravityQuota, claudeQuota, codexQuota, devinQuota, kimiQuota, museQuota, xaiQuota]
+    [antigravityQuota, claudeQuota, codexQuota, devinQuota, kimiQuota, museQuota, opencodeQuota, zaiQuota, xaiQuota]
   );
 
   const getQuota = useCallback(

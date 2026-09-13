@@ -14,3 +14,5 @@ export * from './models';
 export * from './plugins';
 export * from './transformers';
 export * from './vertex';
+export * from './opencode';
+export * from './zai';

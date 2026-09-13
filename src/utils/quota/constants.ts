@@ -38,6 +38,14 @@ export const TYPE_COLORS: Record<string, TypeColorSet> = {
     light: { bg: '#e8e0ff', text: '#5b21b6' },
     dark: { bg: '#2e1065', text: '#c4b5fd' },
   },
+  opencode: {
+    light: { bg: '#e0f2f1', text: '#00695c' },
+    dark: { bg: '#004d40', text: '#80cbc4' },
+  },
+  zai: {
+    light: { bg: '#e3f2fd', text: '#0d47a1' },
+    dark: { bg: '#0d47a1', text: '#90caf9' },
+  },
   antigravity: {
     light: { bg: '#e0f7fa', text: '#006064' },
     dark: { bg: '#004d40', text: '#80deea' },
