@@ -9,7 +9,9 @@ import type {
   CodexQuotaState,
   KimiQuotaState,
   MuseQuotaState,
+  OpenCodeGoQuotaState,
   XaiQuotaState,
+  ZaiQuotaState,
 } from '@/types';
 
 type QuotaUpdater<T> = T | ((prev: T) => T);
@@ -21,12 +23,16 @@ interface QuotaStoreState {
   codexQuota: Record<string, CodexQuotaState>;
   kimiQuota: Record<string, KimiQuotaState>;
   museQuota: Record<string, MuseQuotaState>;
+  opencodeQuota: Record<string, OpenCodeGoQuotaState>;
+  zaiQuota: Record<string, ZaiQuotaState>;
   xaiQuota: Record<string, XaiQuotaState>;
   setAntigravityQuota: (updater: QuotaUpdater<Record<string, AntigravityQuotaState>>) => void;
   setClaudeQuota: (updater: QuotaUpdater<Record<string, ClaudeQuotaState>>) => void;
   setCodexQuota: (updater: QuotaUpdater<Record<string, CodexQuotaState>>) => void;
   setKimiQuota: (updater: QuotaUpdater<Record<string, KimiQuotaState>>) => void;
   setMuseQuota: (updater: QuotaUpdater<Record<string, MuseQuotaState>>) => void;
+  setOpencodeQuota: (updater: QuotaUpdater<Record<string, OpenCodeGoQuotaState>>) => void;
+  setZaiQuota: (updater: QuotaUpdater<Record<string, ZaiQuotaState>>) => void;
   setXaiQuota: (updater: QuotaUpdater<Record<string, XaiQuotaState>>) => void;
   clearQuotaCache: () => void;
 }
@@ -45,6 +51,8 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
   codexQuota: {},
   kimiQuota: {},
   museQuota: {},
+  opencodeQuota: {},
+  zaiQuota: {},
   xaiQuota: {},
   setAntigravityQuota: (updater) =>
     set((state) => ({
@@ -66,6 +74,14 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
     set((state) => ({
       museQuota: resolveUpdater(updater, state.museQuota),
     })),
+  setOpencodeQuota: (updater) =>
+    set((state) => ({
+      opencodeQuota: resolveUpdater(updater, state.opencodeQuota),
+    })),
+  setZaiQuota: (updater) =>
+    set((state) => ({
+      zaiQuota: resolveUpdater(updater, state.zaiQuota),
+    })),
   setXaiQuota: (updater) =>
     set((state) => ({
       xaiQuota: resolveUpdater(updater, state.xaiQuota),
@@ -78,6 +94,8 @@ export const useQuotaStore = create<QuotaStoreState>((set) => ({
       codexQuota: {},
       kimiQuota: {},
       museQuota: {},
+      opencodeQuota: {},
+      zaiQuota: {},
       xaiQuota: {},
     })),
 }));

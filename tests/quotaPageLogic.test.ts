@@ -22,6 +22,8 @@ const FILES: AuthFileItem[] = [
   file('codex-b.json', 'codex'),
   file('grok-a.json', 'grok'), // 别名归一到 xai
   file('muse-a.json', 'muse'),
+  file('opencode-a.json', 'opencode'),
+  file('zai-a.json', 'zai'),
   file('gemini-a.json', 'gemini'), // 不支持额度
   file('claude-off.json', 'claude', { disabled: true }), // 停用
 ];
@@ -40,7 +42,7 @@ describe('classifyQuotaFiles', () => {
     const entries = classifyQuotaFiles(FILES);
     expect(entries.map((entry) => entry.file.name)).not.toContain('gemini-a.json');
     expect(entries.map((entry) => entry.file.name)).not.toContain('claude-off.json');
-    expect(entries).toHaveLength(6);
+    expect(entries).toHaveLength(8);
   });
 
   test('orders entries by provider tab order', () => {
@@ -52,6 +54,8 @@ describe('classifyQuotaFiles', () => {
       'xai',
       'kimi',
       'muse',
+      'opencode',
+      'zai',
     ]);
   });
 });
@@ -59,13 +63,15 @@ describe('classifyQuotaFiles', () => {
 describe('buildTabCounts', () => {
   test('counts per provider plus an all total, zero-filling empty tabs', () => {
     expect(buildTabCounts(classifyQuotaFiles(FILES))).toEqual({
-      all: 6,
+      all: 8,
       claude: 1,
       antigravity: 0,
       codex: 2,
       xai: 1,
       kimi: 1,
       muse: 1,
+      opencode: 1,
+      zai: 1,
     });
   });
 });
@@ -74,7 +80,7 @@ describe('filterEntriesByTab', () => {
   const entries = classifyQuotaFiles(FILES);
 
   test("passes everything through on the 'all' tab", () => {
-    expect(filterEntriesByTab(entries, 'all')).toHaveLength(6);
+    expect(filterEntriesByTab(entries, 'all')).toHaveLength(8);
   });
 
   test('filters to a single provider', () => {
@@ -145,13 +151,17 @@ describe('sortQuotaEntries', () => {
         'codex-b.json': 400,
         'grok-a.json': 50,
         'muse-a.json': 150,
+        'opencode-a.json': 120,
+        'zai-a.json': 250,
       })
     );
     expect(byName(sorted)).toEqual([
       'grok-a.json',
       'claude-a.json',
+      'opencode-a.json',
       'muse-a.json',
       'kimi-a.json',
+      'zai-a.json',
       'codex-a.json',
       'codex-b.json',
     ]);
@@ -172,6 +182,8 @@ describe('sortQuotaEntries', () => {
       'codex-a.json',
       'grok-a.json',
       'muse-a.json',
+      'opencode-a.json',
+      'zai-a.json',
     ]);
   });
 

@@ -466,30 +466,8 @@ export function buildTimelineLane(input: TimelineLaneInput): TimelineLane {
     };
   }
 
-  if (provider === 'kimi') {
-    const rows = ((quota as { rows?: KimiRowLike[] }).rows ?? []).filter(
-      (row) => typeof row.resetAtMs === 'number'
-    );
-    const chosen = pickLaneWindow(rows, maxPeriodHours);
-    if (!chosen) return empty;
-
-    // Kimi reports raw counts; remaining is derived.
-    const remainingOf = (row: KimiRowLike) =>
-      row.limit > 0 ? clampPercent(Math.round(((row.limit - row.used) / row.limit) * 100)) : null;
-
-    return {
-      ...empty,
-      anchorMs: chosen.resetAtMs ?? null,
-      periodHours: chosen.periodHours ?? null,
-      remaining: remainingOf(chosen),
-      limits: rows
-        .map((row) => ({ label: row.label ?? '', remaining: remainingOf(row) }))
-        .filter((limit): limit is TimelineLimit => limit.remaining !== null),
-    };
-  }
-
-  if (provider === 'muse') {
-    // Muse rows share Kimi's shape; used/limit are already percentages.
+  if (provider === 'kimi' || provider === 'muse' || provider === 'opencode' || provider === 'zai') {
+    // Percent-based rows with reset instants; remaining is derived.
     const rows = ((quota as { rows?: KimiRowLike[] }).rows ?? []).filter(
       (row) => typeof row.resetAtMs === 'number'
     );
