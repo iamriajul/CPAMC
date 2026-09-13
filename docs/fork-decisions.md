@@ -53,3 +53,18 @@ rendered. 429s surface a retry-later message instead of a raw error.
 grep -q "muse: { ...MUSE_CONFIG" src/features/quota/providers/index.ts
 bun test tests/museQuota.test.ts
 ```
+
+## muse-quota-page-map
+
+**Quota page maps every provider tab or it crashes, not degrades**
+
+`quotaByType` was a hardcoded five-provider literal behind an `as unknown`
+cast, so the first muse file crashed the whole Quota route reading
+`[file.name]` off `undefined`. The literal now uses `satisfies
+Record<QuotaProviderType, …>` instead of a cast: the next unmapped provider
+fails type-check (CI) rather than the route at runtime.
+
+```bash
+grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
+bun run type-check
+```
