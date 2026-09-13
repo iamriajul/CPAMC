@@ -568,5 +568,27 @@ export function buildTimelineLane(input: TimelineLaneInput): TimelineLane {
     };
   }
 
+  if (provider === 'muse') {
+    // Muse rows share Kimi's shape; used/limit are already percentages.
+    const rows = ((quota as { rows?: KimiRowLike[] }).rows ?? []).filter(
+      (row) => typeof row.resetAtMs === 'number'
+    );
+    const chosen = pickLaneWindow(rows, maxPeriodHours);
+    if (!chosen) return empty;
+
+    const remainingOf = (row: KimiRowLike) =>
+      row.limit > 0 ? clampPercent(Math.round(((row.limit - row.used) / row.limit) * 100)) : null;
+
+    return {
+      ...empty,
+      anchorMs: chosen.resetAtMs ?? null,
+      periodHours: chosen.periodHours ?? null,
+      remaining: remainingOf(chosen),
+      limits: rows
+        .map((row) => ({ label: row.label ?? '', remaining: remainingOf(row) }))
+        .filter((limit): limit is TimelineLimit => limit.remaining !== null),
+    };
+  }
+
   return empty;
 }
