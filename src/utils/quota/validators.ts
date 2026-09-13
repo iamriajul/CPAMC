@@ -30,6 +30,10 @@ export function isKimiFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'kimi';
 }
 
+export function isMuseFile(file: AuthFileItem): boolean {
+  return resolveAuthProvider(file) === 'muse';
+}
+
 export function isXaiFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'xai';
 }

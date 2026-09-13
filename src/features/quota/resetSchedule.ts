@@ -129,6 +129,10 @@ export function collectQuotaRowInstants(
     return collectRows((quota as { rows?: WindowLike[] }).rows ?? [], 'row');
   }
 
+  if (provider === 'muse') {
+    return collectRows((quota as { rows?: WindowLike[] }).rows ?? [], 'row');
+  }
+
   return [];
 }
 

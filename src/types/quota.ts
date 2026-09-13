@@ -420,3 +420,27 @@ export interface XaiQuotaState {
   error?: string;
   errorStatus?: number;
 }
+
+// Muse subscription quota rows (percent-based windows from the key endpoint)
+export interface MuseQuotaRow {
+  id: string;
+  /** Translated display label (timeline lanes key on this — must be unique). */
+  label?: string;
+  labelKey: string;
+  labelParams?: Record<string, string | number>;
+  used: number;
+  limit: number;
+  /** Reset instant in epoch ms; null when the window reports no timestamp. */
+  resetAtMs?: number | null;
+  /** Window length in hours when known. */
+  periodHours?: number | null;
+}
+
+export interface MuseQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  rows: MuseQuotaRow[];
+  tier?: string;
+  email?: string;
+  error?: string;
+  errorStatus?: number;
+}
