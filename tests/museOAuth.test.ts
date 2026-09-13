@@ -32,11 +32,26 @@ describe('Muse OAuth UI wiring', () => {
   });
 
   test('provides muse OAuth translations in all locales', () => {
+    // Every key the OAuth card consumes for a builtin provider (see
+    // OAuthPage renderOAuthProviderCard + startAuth/startPolling).
+    const requiredKeys = [
+      'muse_oauth_title',
+      'muse_oauth_button',
+      'muse_oauth_hint',
+      'muse_oauth_url_label',
+      'muse_open_link',
+      'muse_copy_link',
+      'muse_oauth_status_waiting',
+      'muse_oauth_status_success',
+      'muse_oauth_status_error',
+      'muse_oauth_start_error',
+      'muse_oauth_polling_error',
+    ] as const;
     for (const locale of [en, zhCN, zhTW, ru] as const) {
       const authLogin = (locale as Record<string, Record<string, string>>).auth_login;
-      expect(authLogin.muse_oauth_title.length).toBeGreaterThan(0);
-      expect(authLogin.muse_oauth_button.length).toBeGreaterThan(0);
-      expect(authLogin.muse_oauth_hint.length).toBeGreaterThan(0);
+      for (const key of requiredKeys) {
+        expect(authLogin[key]?.length).toBeGreaterThan(0);
+      }
       const authFiles = (locale as Record<string, Record<string, string>>).auth_files;
       expect(authFiles.filter_muse).toBe('Muse');
     }

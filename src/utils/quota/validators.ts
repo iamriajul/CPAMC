@@ -3,13 +3,11 @@
  */
 
 import type { AuthFileItem } from '@/types';
+import { normalizeOAuthProviderKey } from '@/utils/providerKeys';
 
 export function resolveAuthProvider(file: AuthFileItem): string {
   const raw = file.provider ?? file.type ?? '';
-  const key = String(raw).trim().toLowerCase().replace(/_/g, '-');
-  if (key === 'x-ai' || key === 'grok') return 'xai';
-  if (key === 'muse-code' || key === 'musecode') return 'muse';
-  return key;
+  return normalizeOAuthProviderKey(String(raw));
 }
 
 export function isAntigravityFile(file: AuthFileItem): boolean {
@@ -26,10 +24,6 @@ export function isCodexFile(file: AuthFileItem): boolean {
 
 export function isKimiFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'kimi';
-}
-
-export function isMuseFile(file: AuthFileItem): boolean {
-  return resolveAuthProvider(file) === 'muse';
 }
 
 export function isXaiFile(file: AuthFileItem): boolean {
