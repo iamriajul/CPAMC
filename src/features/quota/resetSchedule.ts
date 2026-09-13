@@ -178,6 +178,10 @@ export function collectQuotaRowInstants(
       }));
   }
 
+  if (provider === 'muse') {
+    return collectRows((quota as { rows?: WindowLike[] }).rows ?? [], 'row');
+  }
+
   return [];
 }
 
