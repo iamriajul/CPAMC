@@ -571,6 +571,19 @@
     "pay_as_you_go_enabled": "已啟用，封頂 {{cap}}",
     "pay_as_you_go_disabled": "未啟用"
   },
+  "zai_import": {
+    "title": "Z.AI API 金鑰",
+    "description": "貼上 Z.AI 控制台的 API 金鑰。儲存前會先到官方 Coding 介面驗證——同一訂閱，無需瀏覽器流程。",
+    "dashboard_button": "開啟金鑰管理頁",
+    "key_label": "API 金鑰",
+    "key_hint": "在 z.ai/manage-apikey/apikey-list 處建立。",
+    "key_placeholder": "<id>.<secret>",
+    "key_required": "請先貼上 API 金鑰。",
+    "import_button": "匯入金鑰",
+    "success": "Z.AI 金鑰匯入成功。",
+    "result_title": "匯入結果",
+    "result_file": "驗證檔案"
+  },
   "opencode_import": {
     "title": "OpenCode Go API 金鑰",
     "description": "從 Zen 控制台貼上 OpenCode Zen Go API 金鑰。儲存前會先到官方閘道驗證。",

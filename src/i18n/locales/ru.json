@@ -570,6 +570,19 @@
     "pay_as_you_go_enabled": "Включено, лимит {{cap}}",
     "pay_as_you_go_disabled": "Отключено"
   },
+  "zai_import": {
+    "title": "API-ключ Z.AI",
+    "description": "Вставьте API-ключ из консоли Z.AI. Перед сохранением ключ проверяется на живом coding-эндпоинте — тот же план, без браузера.",
+    "dashboard_button": "Открыть страницу ключей",
+    "key_label": "API-ключ",
+    "key_hint": "Создаётся на z.ai/manage-apikey/apikey-list.",
+    "key_placeholder": "<id>.<secret>",
+    "key_required": "Сначала вставьте API-ключ.",
+    "import_button": "Импортировать ключ",
+    "success": "Ключ Z.AI импортирован.",
+    "result_title": "Результат импорта",
+    "result_file": "Файл авторизации"
+  },
   "opencode_import": {
     "title": "API-ключ OpenCode Go",
     "description": "Вставьте API-ключ OpenCode Zen Go из консоли Zen. Перед сохранением ключ проверяется на живом шлюзе.",

@@ -8,6 +8,7 @@ import { IconPlug } from '@/components/ui/icons';
 import { useAuthStore, useNotificationStore, useThemeStore } from '@/stores';
 import { oauthApi, opencodeApi, pluginsApi, type BuiltInOAuthProvider } from '@/services/api';
 import { vertexApi, type VertexImportResponse } from '@/services/api/vertex';
+import { zaiApi } from '@/services/api/zai';
 import { copyToClipboard } from '@/utils/clipboard';
 import { getErrorMessage, isRecord } from '@/utils/helpers';
 import { notifyAuthFilesChanged } from '@/features/authFiles/authFilesEvents';
@@ -59,6 +60,13 @@ interface VertexImportState {
 interface OpenCodeImportState {
   apiKey: string;
   baseUrl: string;
+  loading: boolean;
+  error?: string;
+  result?: { authFile?: string };
+}
+
+interface ZaiImportState {
+  apiKey: string;
   loading: boolean;
   error?: string;
   result?: { authFile?: string };
@@ -311,6 +319,10 @@ export function OAuthPage() {
   const [opencodeState, setOpencodeState] = useState<OpenCodeImportState>({
     apiKey: '',
     baseUrl: '',
+    loading: false,
+  });
+  const [zaiImportState, setZaiImportState] = useState<ZaiImportState>({
+    apiKey: '',
     loading: false,
   });
   const attempts = useRef(
@@ -614,8 +626,7 @@ export function OAuthPage() {
     }
   };
 
-  const handleOpencodeImport = async () => {
-    const apiKey = opencodeState.apiKey.trim();
+  const handleOpencodeImport = async () => {    const apiKey = opencodeState.apiKey.trim();
     if (!apiKey) {
       const message = t('opencode_import.key_required');
       setOpencodeState((prev) => ({ ...prev, error: message }));
@@ -633,6 +644,35 @@ export function OAuthPage() {
     } catch (err: unknown) {
       const message = getErrorMessage(err);
       setOpencodeState((prev) => ({
+        ...prev,
+        loading: false,
+        error: message || t('notification.upload_failed'),
+      }));
+      const notification = message
+        ? `${t('notification.upload_failed')}: ${message}`
+        : t('notification.upload_failed');
+      showNotification(notification, 'error');
+    }
+  };
+
+    const handleZaiImport = async () => {
+    const apiKey = zaiImportState.apiKey.trim();
+    if (!apiKey) {
+      const message = t('zai_import.key_required');
+      setZaiImportState((prev) => ({ ...prev, error: message }));
+      showNotification(message, 'warning');
+      return;
+    }
+    setZaiImportState((prev) => ({ ...prev, loading: true, error: undefined, result: undefined }));
+    try {
+      const res = await zaiApi.importKey(apiKey);
+      const result = { authFile: res.auth_file ?? res.file };
+      setZaiImportState((prev) => ({ ...prev, loading: false, result, apiKey: '' }));
+      notifyAuthFilesChanged();
+      showNotification(t('zai_import.success'), 'success');
+    } catch (err: unknown) {
+      const message = getErrorMessage(err);
+      setZaiImportState((prev) => ({
         ...prev,
         loading: false,
         error: message || t('notification.upload_failed'),
@@ -819,6 +859,65 @@ export function OAuthPage() {
         {/* Vertex JSON 登录 */}
         <section className={styles.providerSection}>
           <h2 className={styles.sectionTitle}>{t('auth_login.other_login_methods')}</h2>
+          <Card
+            title={
+              <span className={styles.cardTitle}>
+                <img src={iconZai} alt="" className={styles.cardTitleIcon} />
+                {t('zai_import.title')}
+              </span>
+            }
+            extra={
+              <div className={styles.featuredActions}>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    window.open(
+                      'https://z.ai/manage-apikey/apikey-list',
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }
+                >
+                  {t('zai_import.dashboard_button')}
+                </Button>
+                <Button onClick={handleZaiImport} loading={zaiImportState.loading}>
+                  {t('zai_import.import_button')}
+                </Button>
+              </div>
+            }
+          >
+            <div className={styles.cardContent}>
+              <div className={styles.cardHint}>{t('zai_import.description')}</div>
+              <Input
+                label={t('zai_import.key_label')}
+                hint={t('zai_import.key_hint')}
+                type="password"
+                autoComplete="off"
+                value={zaiImportState.apiKey}
+                onChange={(e) =>
+                  setZaiImportState((prev) => ({
+                    ...prev,
+                    apiKey: e.target.value,
+                    error: undefined,
+                    result: undefined,
+                  }))
+                }
+                placeholder={t('zai_import.key_placeholder')}
+              />
+              {zaiImportState.error && <div className="status-badge error">{zaiImportState.error}</div>}
+              {zaiImportState.result?.authFile && (
+                <div className={styles.connectionBox}>
+                  <div className={styles.connectionLabel}>{t('zai_import.result_title')}</div>
+                  <div className={styles.keyValueList}>
+                    <div className={styles.keyValueItem}>
+                      <span className={styles.keyValueKey}>{t('zai_import.result_file')}</span>
+                      <span className={styles.keyValueValue}>{zaiImportState.result.authFile}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
           <Card
             title={
               <span className={styles.cardTitle}>

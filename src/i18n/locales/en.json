@@ -571,6 +571,19 @@
     "pay_as_you_go_enabled": "Enabled, cap {{cap}}",
     "pay_as_you_go_disabled": "Disabled"
   },
+  "zai_import": {
+    "title": "Z.AI API Key",
+    "description": "Paste a Z.AI dashboard API key. The key is validated against the live coding endpoint before saving — same plan, no browser flow needed.",
+    "dashboard_button": "Open API Key Dashboard",
+    "key_label": "API key",
+    "key_hint": "Created at z.ai/manage-apikey/apikey-list.",
+    "key_placeholder": "<id>.<secret>",
+    "key_required": "Please paste an API key first.",
+    "import_button": "Import Key",
+    "success": "Z.AI key imported.",
+    "result_title": "Import result",
+    "result_file": "Auth file"
+  },
   "opencode_import": {
     "title": "OpenCode Go API Key",
     "description": "Paste an OpenCode Zen Go API key from the Zen console. The key is validated against the live gateway before saving.",

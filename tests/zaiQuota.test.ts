@@ -146,3 +146,20 @@ describe('Z.AI quota wiring', () => {
     }
   });
 });
+
+describe('Z.AI key import wiring', () => {
+  test('provides zai_import translations', async () => {
+    const en = (await import('../src/i18n/locales/en.json')).default;
+    const strings = en as unknown as Record<string, Record<string, string>>;
+    for (const key of [
+      'title',
+      'dashboard_button',
+      'key_label',
+      'import_button',
+      'success',
+      'result_file',
+    ]) {
+      expect(strings.zai_import[key]?.length).toBeGreaterThan(0);
+    }
+  });
+});
