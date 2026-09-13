@@ -147,3 +147,21 @@ describe('Muse timeline lane', () => {
     expect(new Set(labels).size).toBe(labels.length);
   });
 });
+
+describe('Muse quota page wiring', () => {
+  test('every quota tab type resolves to an adapter slice that exists', async () => {
+    const { QUOTA_TAB_ORDER } = await import('../src/features/quota/constants');
+    const { useQuotaStore } = await import('../src/stores/useQuotaStore');
+    const state = useQuotaStore.getState();
+    for (const type of QUOTA_TAB_ORDER) {
+      const adapter = QUOTA_ADAPTERS[type];
+      expect(adapter).toBeDefined();
+      // Mirrors QuotaPage quotaByType: selector slice must exist or the page
+      // crashes reading [file.name] off undefined.
+      const slice = adapter.storeSelector(state as never) as unknown;
+      expect(slice).toBeDefined();
+      expect(typeof state[adapter.storeSetter]).toBe('function');
+    }
+    expect(QUOTA_TAB_ORDER).toContain('muse');
+  });
+});
