@@ -9,14 +9,11 @@ import {
 } from '@/utils/providerKeys';
 
 export type BuiltInOAuthProvider =
-  'codex' | 'anthropic' | 'antigravity' | 'kimi' | 'kimi-ai' | 'xai' | 'devin' | 'meta';
+  'codex' | 'anthropic' | 'antigravity' | 'kimi' | 'kimi-ai' | 'xai' | 'devin' | 'meta' | 'muse';
 
 export interface OAuthStartResponse {
   url: string;
   state?: string;
-  user_code?: string;
-  flow?: string;
-  expires_in?: number;
 }
 
 export interface OAuthCallbackResponse {
