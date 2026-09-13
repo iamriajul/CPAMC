@@ -16,14 +16,27 @@ import type {
   CopilotQuotaState,
   MetaQuotaState,
   MuseQuotaState,
+  OpenCodeGoQuotaState,
   PluginQuotaState,
   XaiQuotaState,
+  ZaiQuotaState,
 } from '@/types';
 
 export type QuotaUpdater<T> = T | ((prev: T) => T);
 
 export type QuotaProviderType =
-  'antigravity' | 'claude' | 'codex' | 'devin' | 'kimi' | 'copilot' | 'meta' | 'muse' | 'plugin' | 'xai';
+  | 'antigravity'
+  | 'claude'
+  | 'codex'
+  | 'devin'
+  | 'kimi'
+  | 'copilot'
+  | 'meta'
+  | 'muse'
+  | 'opencode'
+  | 'zai'
+  | 'plugin'
+  | 'xai';
 
 /** useQuotaStore 的结构契约（storeSelector/storeSetter 依赖）。 */
 export interface QuotaStore {
@@ -35,6 +48,8 @@ export interface QuotaStore {
   copilotQuota: Record<string, CopilotQuotaState>;
   metaQuota: Record<string, MetaQuotaState>;
   museQuota: Record<string, MuseQuotaState>;
+  opencodeQuota: Record<string, OpenCodeGoQuotaState>;
+  zaiQuota: Record<string, ZaiQuotaState>;
   pluginQuota: Record<string, PluginQuotaState>;
   xaiQuota: Record<string, XaiQuotaState>;
   setAntigravityQuota: (updater: QuotaUpdater<Record<string, AntigravityQuotaState>>) => void;
@@ -45,6 +60,8 @@ export interface QuotaStore {
   setCopilotQuota: (updater: QuotaUpdater<Record<string, CopilotQuotaState>>) => void;
   setMetaQuota: (updater: QuotaUpdater<Record<string, MetaQuotaState>>) => void;
   setMuseQuota: (updater: QuotaUpdater<Record<string, MuseQuotaState>>) => void;
+  setOpencodeQuota: (updater: QuotaUpdater<Record<string, OpenCodeGoQuotaState>>) => void;
+  setZaiQuota: (updater: QuotaUpdater<Record<string, ZaiQuotaState>>) => void;
   setPluginQuota: (updater: QuotaUpdater<Record<string, PluginQuotaState>>) => void;
   setXaiQuota: (updater: QuotaUpdater<Record<string, XaiQuotaState>>) => void;
   clearQuotaCache: () => void;
