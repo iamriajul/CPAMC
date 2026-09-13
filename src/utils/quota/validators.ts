@@ -30,6 +30,14 @@ export function isMuseFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'muse';
 }
 
+export function isOpencodeFile(file: AuthFileItem): boolean {
+  return resolveAuthProvider(file) === 'opencode';
+}
+
+export function isZaiFile(file: AuthFileItem): boolean {
+  return resolveAuthProvider(file) === 'zai';
+}
+
 export function isXaiFile(file: AuthFileItem): boolean {
   return resolveAuthProvider(file) === 'xai';
 }
