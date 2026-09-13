@@ -69,3 +69,19 @@ grep -q "muse: museQuota" src/features/quota/QuotaPage.tsx
 grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
 bun run type-check
 ```
+
+## opencode-zai-panel
+
+**OpenCode key import + Z.AI OAuth cards and both quota adapters**
+
+OAuth page gains the Z.AI browser-flow card (zcode:// paste-back, same UX as
+the xAI manual flow) and the OpenCode Go key-import card (validated save via
+the backend import endpoint). Quota page, auth-file cards, and timeline lanes
+cover both providers; the page map already guards new providers with
+`satisfies`, extended here to the two new slices.
+
+```bash
+grep -q "id: 'zai'" src/pages/OAuthPage.tsx
+grep -q "opencode: opencodeQuota" src/features/quota/QuotaPage.tsx
+bun test tests/opencodeQuota.test.ts tests/zaiQuota.test.ts
+```
