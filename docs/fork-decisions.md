@@ -65,6 +65,7 @@ Record<QuotaProviderType, …>` instead of a cast: the next unmapped provider
 fails type-check (CI) rather than the route at runtime.
 
 ```bash
+grep -q "muse: museQuota" src/features/quota/QuotaPage.tsx
 grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
 bun run type-check
 ```
