@@ -76,13 +76,17 @@ the ruleset normally rejects, so:
 Tag the queue tip on `main` (never a feature branch), then push the tag:
 
 ```bash
-git tag vA.B.C-muse.N && git push origin vA.B.C-muse.N
+git tag vA.B.9NN && git push origin vA.B.9NN
 ```
 
-`vA.B.C` stays just above the upstream tag the queue sits on; `-muse.N`
-marks fork revisions. The `v*` tag build publishes `management.html` to the
-fork's GitHub Release; the proxy picks it up via `panel-github-repository`.
-Version bumps live in the tag — never land version churn on a feature PR.
+`A.B` tracks the upstream tag the queue sits on; patch `9NN` (the 900
+series, e.g. `v1.23.905` on upstream `v1.23.1`) marks fork revisions.
+Upstream owns the low patch range, so never mint below `900` on a shared
+`A.B` line — if upstream's own patches ever approach `900`, roll the fork
+line forward to the next minor first. The `v*` tag build publishes
+`management.html` to the fork's GitHub Release; the proxy picks it up via
+`panel-github-repository`. Version bumps live in the tag — never land
+version churn on a feature PR.
 
 ## What not to do
 
