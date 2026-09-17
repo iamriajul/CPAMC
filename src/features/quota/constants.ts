@@ -10,7 +10,6 @@ export const QUOTA_TAB_ORDER: readonly QuotaProviderType[] = [
   'devin',
   'meta',
   'plugin',
-  'muse',
   'opencode',
   'zai',
 ];
