@@ -8,7 +8,7 @@ export const QUOTA_TAB_ORDER: readonly QuotaProviderType[] = [
   'xai',
   'kimi',
   'devin',
-  'muse',
+  'meta',
   'opencode',
   'zai',
 ];

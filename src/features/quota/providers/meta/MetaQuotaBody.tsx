@@ -1,10 +1,10 @@
 /**
- * Muse 额度渲染体：用量行水位条 + 订阅档位。
+ * Meta 额度渲染体：用量行水位条 + 订阅档位。
  */
 
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { MuseQuotaState } from '@/types';
+import type { MetaQuotaState } from '@/types';
 import { buildResetDisplay } from '@/utils/quota';
 import { useNow } from '@/hooks/useNow';
 import { QuotaMeter } from '../../components/QuotaMeter';
@@ -12,12 +12,12 @@ import { QuotaResetLabel } from '../../components/QuotaResetLabel';
 import { collectQuotaRowInstants, pickUrgentRowId } from '../../resetSchedule';
 import type { QuotaBodyProps } from '../../types';
 
-export function MuseQuotaBody({ quota, classes }: QuotaBodyProps<MuseQuotaState>) {
+export function MetaQuotaBody({ quota, classes }: QuotaBodyProps<MetaQuotaState>) {
   const { t, i18n } = useTranslation();
   // Ahead of the early return below — hooks cannot be conditional.
   const now = useNow();
   const soonestRowId = useMemo(
-    () => pickUrgentRowId(collectQuotaRowInstants('muse', quota), now),
+    () => pickUrgentRowId(collectQuotaRowInstants('meta', quota), now),
     [quota, now]
   );
   const rows = quota.rows ?? [];
@@ -29,10 +29,10 @@ export function MuseQuotaBody({ quota, classes }: QuotaBodyProps<MuseQuotaState>
       <>
         {quota.tier && (
           <div className={classes.quotaMessage}>
-            {t('muse_quota.subscription_tier', { tier: quota.tier })}
+            {t('meta_quota.subscription_tier', { tier: quota.tier })}
           </div>
         )}
-        <div className={classes.quotaMessage}>{t('muse_quota.no_windows')}</div>
+        <div className={classes.quotaMessage}>{t('meta_quota.no_windows')}</div>
       </>
     );
   }
@@ -41,7 +41,7 @@ export function MuseQuotaBody({ quota, classes }: QuotaBodyProps<MuseQuotaState>
     <>
       {quota.tier && (
         <div className={classes.quotaMessage}>
-          {t('muse_quota.subscription_tier', { tier: quota.tier })}
+          {t('meta_quota.subscription_tier', { tier: quota.tier })}
         </div>
       )}
       {rows.map((row, index) => {

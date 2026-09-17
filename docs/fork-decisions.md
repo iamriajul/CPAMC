@@ -23,53 +23,43 @@ without your change. A decision with no command is a decision nothing
 protects. Changes confined to fork-owned files (no upstream counterpart)
 cannot conflict on sync and need no section.
 
-## muse-oauth-panel
+## meta-oauth-panel
 
-**Muse OAuth login card (muse-spark subscriptions)**
+**Meta OAuth login card (Muse subscriptions via the Meta provider)**
 
-OAuth page exposes the backend `muse-auth-url` device flow completely from
-the UI: Muse provider card, icon, `muse-code` aliases, auth-file
-type/presets/icons, and `muse_oauth_*` / `filter_muse` strings in
-en/zh-CN/zh-TW/ru. Upstream issue
-`router-for-me/CLIProxyAPI#5777`; drop this commit when upstream ships it.
+OAuth page exposes the backend `meta-auth-url` device flow completely from
+the UI: Meta provider card, icon, legacy `muse-code` aliases (normalized to
+`meta`), auth-file type/presets/icons, and `meta_oauth_*` / `filter_meta`
+strings in en/zh-CN/zh-TW/ru. The fork's old `muse` lane is gone — upstream's
+Meta provider is the Muse Code lane now, and `muse-auth-url` no longer exists
+server-side.
 
 ```bash
-bun test tests/museOAuth.test.ts
-grep -q "id: 'muse'" src/pages/OAuthPage.tsx
-grep -q "muse_oauth_title" src/i18n/locales/en.json
+bun test tests/metaOAuth.test.ts
+grep -q "id: 'meta'" src/pages/OAuthPage.tsx
+grep -q "meta_oauth_title" src/i18n/locales/en.json
 ```
 
-## muse-quota
+## meta-quota
 
-**Muse subscription usage panel (rolling + weekly windows)**
+**Meta subscription usage panel (rolling + weekly windows)**
 
-Quota page, auth-file cards, and timeline lanes cover muse files via a
+Quota page, auth-file cards, and timeline lanes cover meta files via a
 dedicated adapter: the key endpoint is proxied through the backend api-call
-with the stored account token (empty probe body, no re-onboarding), and only
+with the resolved Meta token (empty probe body, no re-onboarding), and only
 percent/tier/identity fields are kept — the minted api_key is never stored or
 rendered. 429s surface a retry-later message instead of a raw error. Meta
 omits subs_usage entirely for some active subscriptions (observed live on
 the Everyday Usage tier, intermittently — windows come and go between
 probes): that parses to a success state showing tier plus a
-no-windows note, never an error.
-
-```bash
-grep -q "muse: { ...MUSE_CONFIG" src/features/quota/providers/index.ts
-bun test tests/museQuota.test.ts
-```
-
-## muse-quota-page-map
-
-**Quota page maps every provider tab or it crashes, not degrades**
-
-`quotaByType` was a hardcoded five-provider literal behind an `as unknown`
-cast, so the first muse file crashed the whole Quota route reading
-`[file.name]` off `undefined`. The literal now uses `satisfies
+no-windows note, never an error. The page map uses `satisfies
 Record<QuotaProviderType, …>` instead of a cast: the next unmapped provider
 fails type-check (CI) rather than the route at runtime.
 
 ```bash
-grep -q "muse: museQuota" src/features/quota/QuotaPage.tsx
+grep -q "meta: { ...META_CONFIG" src/features/quota/providers/index.ts
+bun test tests/metaQuota.test.ts
+grep -q "meta: metaQuota" src/features/quota/QuotaPage.tsx
 grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
 bun run type-check
 ```

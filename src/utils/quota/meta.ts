@@ -1,27 +1,27 @@
 /**
- * Muse (Meta muse-spark subscription) quota helpers. React-free.
+ * Meta subscription quota helpers. React-free.
  *
  * The subscription key endpoint doubles as the usage endpoint: it returns the
  * minted api_key plus subs_usage windows. Only percent/identity/window fields
  * are kept — the api_key itself is never stored or rendered.
  */
 
-export const MUSE_KEY_URL = 'https://api.meta.ai/muse-code/key';
+export const META_KEY_URL = 'https://api.meta.ai/muse-code/key';
 
-export const MUSE_REQUEST_HEADERS = {
+export const META_REQUEST_HEADERS = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
   Authorization: 'Bearer $TOKEN$',
   'x-api-version': '1.0.0',
 };
 
-export interface MuseUsageWindow {
+export interface MetaUsageWindow {
   used_percent?: number | string | null;
   resets_at?: string | number | null;
   window_duration_mins?: number | string | null;
 }
 
-export interface MuseKeyPayload {
+export interface MetaKeyPayload {
   api_key?: string;
   user_email?: string | null;
   user_id?: string | null;
@@ -29,12 +29,12 @@ export interface MuseKeyPayload {
   subs_tier_id?: string | null;
   subs_tier_name?: string | null;
   subs_usage?: {
-    window?: MuseUsageWindow | null;
-    weekly?: MuseUsageWindow | null;
+    window?: MetaUsageWindow | null;
+    weekly?: MetaUsageWindow | null;
   } | null;
 }
 
-export interface MuseQuotaWindow {
+export interface MetaQuotaWindow {
   id: string;
   labelKey: string;
   labelParams?: Record<string, string | number>;
@@ -43,11 +43,11 @@ export interface MuseQuotaWindow {
   periodHours: number | null;
 }
 
-export interface MuseQuotaData {
+export interface MetaQuotaData {
   active: boolean;
   tier?: string;
   email?: string;
-  windows: MuseQuotaWindow[];
+  windows: MetaQuotaWindow[];
 }
 
 const toFiniteNumber = (value: unknown): number | null => {
@@ -70,16 +70,16 @@ const parseResetMs = (value: unknown): number | null => {
 const formatRollingLabel = (
   minutes: number | null
 ): { labelKey: string; labelParams?: Record<string, string | number> } => {
-  if (minutes === null || minutes <= 0) return { labelKey: 'muse_quota.rolling_window' };
+  if (minutes === null || minutes <= 0) return { labelKey: 'meta_quota.rolling_window' };
   if (minutes % 60 === 0) {
     const hours = minutes / 60;
     return {
-      labelKey: 'muse_quota.rolling_window_hours',
+      labelKey: 'meta_quota.rolling_window_hours',
       labelParams: { count: hours },
     };
   }
   return {
-    labelKey: 'muse_quota.rolling_window_minutes',
+    labelKey: 'meta_quota.rolling_window_minutes',
     labelParams: { count: Math.round(minutes) },
   };
 };
@@ -87,8 +87,8 @@ const formatRollingLabel = (
 const toWindow = (
   id: string,
   label: { labelKey: string; labelParams?: Record<string, string | number> },
-  raw: MuseUsageWindow | null | undefined
-): MuseQuotaWindow | null => {
+  raw: MetaUsageWindow | null | undefined
+): MetaQuotaWindow | null => {
   if (!raw || typeof raw !== 'object') return null;
   const usedPercent = toFiniteNumber(raw.used_percent);
   if (usedPercent === null || usedPercent < 0) return null;
@@ -115,13 +115,13 @@ const asRecord = (value: unknown): Record<string, unknown> | null =>
  * subs_usage at all. That still parses — with zero windows — so the panel
  * shows what is known instead of erroring.
  */
-export function parseMuseKeyPayload(payload: unknown): MuseQuotaData | null {
+export function parseMetaKeyPayload(payload: unknown): MetaQuotaData | null {
   const root = asRecord(payload);
   if (!root) return null;
   const usage = asRecord(root.subs_usage);
-  const windows: MuseQuotaWindow[] = [];
+  const windows: MetaQuotaWindow[] = [];
   if (usage) {
-    const rollingRaw = asRecord(usage.window) as MuseUsageWindow | null;
+    const rollingRaw = asRecord(usage.window) as MetaUsageWindow | null;
     const rollingMinutes = toFiniteNumber(rollingRaw?.window_duration_mins);
     const rolling = toWindow(
       rollingMinutes !== null && rollingMinutes > 0 ? `${Math.round(rollingMinutes)}m` : 'rolling',
@@ -131,8 +131,8 @@ export function parseMuseKeyPayload(payload: unknown): MuseQuotaData | null {
     if (rolling) windows.push(rolling);
     const weekly = toWindow(
       '1w',
-      { labelKey: 'muse_quota.weekly' },
-      asRecord(usage.weekly) as MuseUsageWindow | null
+      { labelKey: 'meta_quota.weekly' },
+      asRecord(usage.weekly) as MetaUsageWindow | null
     );
     if (weekly) {
       weekly.periodHours = 24 * 7;

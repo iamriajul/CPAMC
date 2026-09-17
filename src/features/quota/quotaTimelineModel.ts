@@ -495,7 +495,7 @@ export function buildTimelineLane(input: TimelineLaneInput): TimelineLane {
     };
   }
 
-  if (provider === 'kimi' || provider === 'muse' || provider === 'opencode' || provider === 'zai') {
+  if (provider === 'kimi' || provider === 'meta' || provider === 'opencode' || provider === 'zai') {
     // Percent-based rows with reset instants; remaining is derived.
     const rows = ((quota as { rows?: KimiRowLike[] }).rows ?? []).filter(
       (row) => typeof row.resetAtMs === 'number'

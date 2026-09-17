@@ -13,7 +13,7 @@ import type {
   CodexQuotaState,
   DevinQuotaState,
   KimiQuotaState,
-  MuseQuotaState,
+  MetaQuotaState,
   OpenCodeGoQuotaState,
   XaiQuotaState,
   ZaiQuotaState,
@@ -27,7 +27,7 @@ export type QuotaProviderType =
   | 'codex'
   | 'devin'
   | 'kimi'
-  | 'muse'
+  | 'meta'
   | 'opencode'
   | 'zai'
   | 'xai';
@@ -39,7 +39,7 @@ export interface QuotaStore {
   codexQuota: Record<string, CodexQuotaState>;
   devinQuota: Record<string, DevinQuotaState>;
   kimiQuota: Record<string, KimiQuotaState>;
-  museQuota: Record<string, MuseQuotaState>;
+  metaQuota: Record<string, MetaQuotaState>;
   opencodeQuota: Record<string, OpenCodeGoQuotaState>;
   zaiQuota: Record<string, ZaiQuotaState>;
   xaiQuota: Record<string, XaiQuotaState>;
@@ -48,7 +48,7 @@ export interface QuotaStore {
   setCodexQuota: (updater: QuotaUpdater<Record<string, CodexQuotaState>>) => void;
   setDevinQuota: (updater: QuotaUpdater<Record<string, DevinQuotaState>>) => void;
   setKimiQuota: (updater: QuotaUpdater<Record<string, KimiQuotaState>>) => void;
-  setMuseQuota: (updater: QuotaUpdater<Record<string, MuseQuotaState>>) => void;
+  setMetaQuota: (updater: QuotaUpdater<Record<string, MetaQuotaState>>) => void;
   setOpencodeQuota: (updater: QuotaUpdater<Record<string, OpenCodeGoQuotaState>>) => void;
   setZaiQuota: (updater: QuotaUpdater<Record<string, ZaiQuotaState>>) => void;
   setXaiQuota: (updater: QuotaUpdater<Record<string, XaiQuotaState>>) => void;
