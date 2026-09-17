@@ -4,9 +4,10 @@ Every behaviour this fork changes inside official management-center files,
 and the command that proves each one still works.
 
 The fork is a rebase queue: `main` is the upstream release tag we track, plus
-one commit per change, with no merge commits. Branch protection rejects direct
-pushes and merge commits, so every change lands as one squash-merged PR. The
-commits hold the code; this file holds the why and the proof.
+one commit per change, with no merge commits. A GitHub ruleset enforces the
+queue shape; landing is a temporary-ruleset-disabled force-with-lease push
+(see [fork-sync.md](fork-sync.md)). The commits hold the code; this file holds
+the why and the proof.
 
 After rebasing onto a new upstream release, run:
 
@@ -23,55 +24,27 @@ without your change. A decision with no command is a decision nothing
 protects. Changes confined to fork-owned files (no upstream counterpart)
 cannot conflict on sync and need no section.
 
-## muse-oauth-panel
+## meta-oauth-panel
 
-**Muse OAuth login card (muse-spark subscriptions)**
+**Meta OAuth login card is upstream's; the fork keeps only the legacy alias
+normalization**
 
-OAuth page exposes the backend `muse-auth-url` device flow completely from
-the UI: Muse provider card, icon, `muse-code` aliases, auth-file
-type/presets/icons, and `muse_oauth_*` / `filter_muse` strings in
-en/zh-CN/zh-TW/ru. Upstream issue
-`router-for-me/CLIProxyAPI#5777`; drop this commit when upstream ships it.
-
-```bash
-bun test tests/museOAuth.test.ts
-grep -q "id: 'muse'" src/pages/OAuthPage.tsx
-grep -q "muse_oauth_title" src/i18n/locales/en.json
-```
-
-## muse-quota
-
-**Muse subscription usage panel (rolling + weekly windows)**
-
-Quota page, auth-file cards, and timeline lanes cover muse files via a
-dedicated adapter: the key endpoint is proxied through the backend api-call
-with the stored account token (empty probe body, no re-onboarding), and only
-percent/tier/identity fields are kept — the minted api_key is never stored or
-rendered. 429s surface a retry-later message instead of a raw error. Meta
-omits subs_usage entirely for some active subscriptions (observed live on
-the Everyday Usage tier, intermittently — windows come and go between
-probes): that parses to a success state showing tier plus a
-no-windows note, never an error.
+Upstream v1.24.0 shipped their own Meta provider (OAuth card, quota adapter,
+DCA-token fetcher, i18n), absorbing what this fork had built on the v1.23.1
+base — so the fork's own Meta OAuth card and quota panel were retired in that
+sync, and the Meta card you see in the panel is upstream's code. What the
+fork still owns: legacy `muse` / `muse-code` / `muse_code` / `musecode`
+aliases normalize to `meta` in both the OAuth provider key and the
+management-path key (backend `NormalizeOAuthProvider` maps the same set), so
+auth files saved under the retired fork lane keep working, and meta appears
+in the auth-file filter presets. The fork's old `muse` quota lane is gone and
+must stay gone: no `muse` quota provider, adapter, or tab may reappear.
 
 ```bash
-grep -q "muse: { ...MUSE_CONFIG" src/features/quota/providers/index.ts
-bun test tests/museQuota.test.ts
-```
-
-## muse-quota-page-map
-
-**Quota page maps every provider tab or it crashes, not degrades**
-
-`quotaByType` was a hardcoded five-provider literal behind an `as unknown`
-cast, so the first muse file crashed the whole Quota route reading
-`[file.name]` off `undefined`. The literal now uses `satisfies
-Record<QuotaProviderType, …>` instead of a cast: the next unmapped provider
-fails type-check (CI) rather than the route at runtime.
-
-```bash
-grep -q "muse: museQuota" src/features/quota/QuotaPage.tsx
-grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
-bun run type-check
+bun test tests/metaOAuth.test.ts
+grep -q "muse: 'meta'" src/utils/providerKeys.ts
+! grep -q "muse" src/features/quota/providers/index.ts
+! grep -q "'muse'" src/features/quota/constants.ts
 ```
 
 ## opencode-zai-panel
@@ -81,11 +54,27 @@ bun run type-check
 OAuth page gains the Z.AI browser-flow card (zcode:// paste-back, same UX as
 the xAI manual flow) and the OpenCode Go key-import card (validated save via
 the backend import endpoint). Quota page, auth-file cards, and timeline lanes
-cover both providers; the page map already guards new providers with
-`satisfies`, extended here to the two new slices.
+cover both providers.
 
 ```bash
 grep -q "id: 'zai'" src/pages/OAuthPage.tsx
 grep -q "opencode: opencodeQuota" src/features/quota/QuotaPage.tsx
 bun test tests/opencodeQuota.test.ts tests/zaiQuota.test.ts
+```
+
+## quota-page-map-satisfies
+
+**Quota page provider map is guarded with `satisfies`, not a cast**
+
+The quota page's `quotaByType` map uses `satisfies
+Record<QuotaProviderType, …>` instead of a cast: adding a provider to
+`QuotaProviderType` without wiring its slice into the map fails type-check
+(CI) rather than crashing the route at runtime reading `[file.name]` off
+undefined. Upstream still uses `as unknown as` here; the fork's form is the
+protected one.
+
+```bash
+grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
+! grep -q "as unknown as Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
+bun run type-check
 ```
