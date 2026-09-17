@@ -1,12 +1,13 @@
 const OAUTH_PROVIDER_ALIASES: Record<string, string> = {
   'anti-gravity': 'antigravity',
   grok: 'xai',
+  // Retired fork lane: backend NormalizeOAuthProvider maps these to meta too.
   muse: 'meta',
+  'muse-code': 'meta',
+  muse_code: 'meta',
+  musecode: 'meta',
   'x-ai': 'xai',
   'x.ai': 'xai',
-  'muse-code': 'muse',
-  muse_code: 'muse',
-  musecode: 'muse',
   'opencode-go': 'opencode',
   opencode_go: 'opencode',
   'zai-coding-plan': 'zai',
