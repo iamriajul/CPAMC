@@ -421,8 +421,8 @@ export interface XaiQuotaState {
   errorStatus?: number;
 }
 
-// Muse subscription quota rows (percent-based windows from the key endpoint)
-export interface MuseQuotaRow {
+// Meta subscription quota rows (percent-based windows from the key endpoint)
+export interface MetaQuotaRow {
   id: string;
   /** Translated display label (timeline lanes key on this — must be unique). */
   label?: string;
@@ -436,9 +436,9 @@ export interface MuseQuotaRow {
   periodHours?: number | null;
 }
 
-export interface MuseQuotaState {
+export interface MetaQuotaState {
   status: 'idle' | 'loading' | 'success' | 'error';
-  rows: MuseQuotaRow[];
+  rows: MetaQuotaRow[];
   tier?: string;
   email?: string;
   error?: string;

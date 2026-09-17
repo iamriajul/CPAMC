@@ -1,5 +1,5 @@
 /**
- * Muse 额度数据层。React-free / SCSS-free。
+ * Meta 额度数据层。React-free / SCSS-free。
  *
  * The subscription key endpoint doubles as the usage endpoint; the backend
  * proxies the call with the stored account token (never the browser), and the
@@ -7,21 +7,21 @@
  */
 
 import type { TFunction } from 'i18next';
-import type { AuthFileItem, MuseQuotaRow, MuseQuotaState } from '@/types';
+import type { AuthFileItem, MetaQuotaRow, MetaQuotaState } from '@/types';
 import { apiCallApi, getApiCallErrorMessage } from '@/services/api';
 import {
-  MUSE_KEY_URL,
-  MUSE_REQUEST_HEADERS,
+  META_KEY_URL,
+  META_REQUEST_HEADERS,
   createStatusError,
   isDisabledAuthFile,
-  isMuseFile,
-  parseMuseKeyPayload,
-  type MuseQuotaData,
+  isMetaFile,
+  parseMetaKeyPayload,
+  type MetaQuotaData,
 } from '@/utils/quota';
 import { normalizeAuthIndex } from '@/utils/authIndex';
 import type { QuotaProviderData } from '../types';
 
-const toRows = (data: MuseQuotaData, t: TFunction): MuseQuotaRow[] =>
+const toRows = (data: MetaQuotaData, t: TFunction): MetaQuotaRow[] =>
   data.windows.map((window) => ({
     id: window.id,
     // The timeline lane renders row.label with key={label}: resolve it here so
@@ -35,14 +35,14 @@ const toRows = (data: MuseQuotaData, t: TFunction): MuseQuotaRow[] =>
     periodHours: window.periodHours,
   }));
 
-const fetchMuseQuota = async (
+const fetchMetaQuota = async (
   file: AuthFileItem,
   t: TFunction
-): Promise<{ rows: MuseQuotaRow[]; tier?: string; email?: string }> => {
+): Promise<{ rows: MetaQuotaRow[]; tier?: string; email?: string }> => {
   const rawAuthIndex = file['auth_index'] ?? file.authIndex;
   const authIndex = normalizeAuthIndex(rawAuthIndex);
   if (!authIndex) {
-    throw new Error(t('muse_quota.missing_auth_index'));
+    throw new Error(t('meta_quota.missing_auth_index'));
   }
 
   // No { onboard: true } here: refresh/usage probes send an empty object so an
@@ -50,36 +50,36 @@ const fetchMuseQuota = async (
   const result = await apiCallApi.request({
     authIndex,
     method: 'POST',
-    url: MUSE_KEY_URL,
-    header: { ...MUSE_REQUEST_HEADERS },
+    url: META_KEY_URL,
+    header: { ...META_REQUEST_HEADERS },
     data: '{}',
   });
 
   if (result.statusCode < 200 || result.statusCode >= 300) {
     if (result.statusCode === 429) {
-      throw createStatusError(t('muse_quota.rate_limited'), result.statusCode);
+      throw createStatusError(t('meta_quota.rate_limited'), result.statusCode);
     }
     throw createStatusError(getApiCallErrorMessage(result), result.statusCode);
   }
 
-  const parsed = parseMuseKeyPayload(result.body ?? result.bodyText);
+  const parsed = parseMetaKeyPayload(result.body ?? result.bodyText);
   if (!parsed) {
-    throw new Error(t('muse_quota.empty_data'));
+    throw new Error(t('meta_quota.empty_data'));
   }
   if (!parsed.active) {
-    throw new Error(t('muse_quota.inactive_subscription'));
+    throw new Error(t('meta_quota.inactive_subscription'));
   }
 
   return { rows: toRows(parsed, t), tier: parsed.tier, email: parsed.email };
 };
 
-export const MUSE_CONFIG: QuotaProviderData<MuseQuotaState, Awaited<ReturnType<typeof fetchMuseQuota>>> = {
-  type: 'muse',
-  i18nPrefix: 'muse_quota',
-  filterFn: (file) => isMuseFile(file) && !isDisabledAuthFile(file),
-  fetchQuota: fetchMuseQuota,
-  storeSelector: (state) => state.museQuota,
-  storeSetter: 'setMuseQuota',
+export const META_CONFIG: QuotaProviderData<MetaQuotaState, Awaited<ReturnType<typeof fetchMetaQuota>>> = {
+  type: 'meta',
+  i18nPrefix: 'meta_quota',
+  filterFn: (file) => isMetaFile(file) && !isDisabledAuthFile(file),
+  fetchQuota: fetchMetaQuota,
+  storeSelector: (state) => state.metaQuota,
+  storeSetter: 'setMetaQuota',
   buildLoadingState: () => ({ status: 'loading', rows: [] }),
   buildSuccessState: (data) => ({
     status: 'success',

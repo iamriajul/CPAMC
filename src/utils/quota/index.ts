@@ -12,7 +12,7 @@ export * from './formatters';
 export * from './relativeTime';
 export * from './validators';
 export * from './builders';
-export * from './muse';
+export * from './meta';
 export * from './opencode';
 export * from './zai';
 export * from './resetCredits';

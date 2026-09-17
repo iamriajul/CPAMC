@@ -34,7 +34,7 @@ export const TYPE_COLORS: Record<string, TypeColorSet> = {
     light: { bg: '#dce8ff', text: '#0560cf' },
     dark: { bg: '#003880', text: '#70b5ff' },
   },
-  muse: {
+  meta: {
     light: { bg: '#e8e0ff', text: '#5b21b6' },
     dark: { bg: '#2e1065', text: '#c4b5fd' },
   },

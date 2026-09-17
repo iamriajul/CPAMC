@@ -1,17 +1,17 @@
 import { describe, expect, test } from 'bun:test';
 import {
-  MUSE_KEY_URL,
-  MUSE_REQUEST_HEADERS,
-  parseMuseKeyPayload,
-} from '../src/utils/quota/muse';
-import { isMuseFile, resolveAuthProvider } from '../src/utils/quota/validators';
+  META_KEY_URL,
+  META_REQUEST_HEADERS,
+  parseMetaKeyPayload,
+} from '../src/utils/quota/meta';
+import { isMetaFile, resolveAuthProvider } from '../src/utils/quota/validators';
 import { QUOTA_ADAPTERS } from '../src/features/quota/providers';
 import { buildTimelineLane } from '../src/features/quota/quotaTimelineModel';
 import en from '../src/i18n/locales/en.json';
 
 const keyResponse = (overrides: Record<string, unknown> = {}) => ({
   api_key: 'LLM|subscription-key-that-must-never-surface',
-  user_email: 'Muse@Example.com',
+  user_email: 'Meta@example.com',
   user_id: 'meta-account-1',
   is_subs_active: true,
   subs_tier_id: 'high',
@@ -30,13 +30,13 @@ const keyResponse = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
-describe('Muse quota parsing', () => {
+describe('Meta quota parsing', () => {
   test('maps rolling + weekly windows with tier and email', () => {
-    const parsed = parseMuseKeyPayload(keyResponse());
+    const parsed = parseMetaKeyPayload(keyResponse());
     expect(parsed).not.toBeNull();
     expect(parsed?.active).toBeTrue();
     expect(parsed?.tier).toBe('High');
-    expect(parsed?.email).toBe('muse@example.com');
+    expect(parsed?.email).toBe('meta@example.com');
     expect(parsed?.windows.length).toBe(2);
     const rolling = parsed?.windows.find((window) => window.id === '300m');
     expect(rolling?.usedPercent).toBe(12.5);
@@ -50,34 +50,34 @@ describe('Muse quota parsing', () => {
   });
 
   test('never exposes the minted api_key', () => {
-    const parsed = parseMuseKeyPayload(keyResponse());
+    const parsed = parseMetaKeyPayload(keyResponse());
     expect(JSON.stringify(parsed)).not.toContain('LLM|');
   });
 
   test('rejects inactive subscriptions and unusable bodies', () => {
-    const inactive = parseMuseKeyPayload(keyResponse({ is_subs_active: false }));
+    const inactive = parseMetaKeyPayload(keyResponse({ is_subs_active: false }));
     expect(inactive?.active).toBeFalse();
-    expect(parseMuseKeyPayload('not-json')).toBeNull();
-    expect(parseMuseKeyPayload(null)).toBeNull();
-    expect(parseMuseKeyPayload([])).toBeNull();
+    expect(parseMetaKeyPayload('not-json')).toBeNull();
+    expect(parseMetaKeyPayload(null)).toBeNull();
+    expect(parseMetaKeyPayload([])).toBeNull();
   });
 
   test('keeps tier and identity when Meta reports no usage windows', () => {
     // Live shape on tiers without windows: active subscription, no subs_usage.
     const { subs_usage: _dropped, ...withoutUsage } = keyResponse();
     void _dropped;
-    const parsed = parseMuseKeyPayload(withoutUsage);
+    const parsed = parseMetaKeyPayload(withoutUsage);
     expect(parsed).not.toBeNull();
     expect(parsed?.active).toBeTrue();
     expect(parsed?.tier).toBe('High');
-    expect(parsed?.email).toBe('muse@example.com');
+    expect(parsed?.email).toBe('meta@example.com');
     expect(parsed?.windows).toEqual([]);
-    expect(parseMuseKeyPayload(keyResponse({ subs_usage: null }))).not.toBeNull();
-    expect(parseMuseKeyPayload(keyResponse({ subs_usage: {} }))?.windows).toEqual([]);
+    expect(parseMetaKeyPayload(keyResponse({ subs_usage: null }))).not.toBeNull();
+    expect(parseMetaKeyPayload(keyResponse({ subs_usage: {} }))?.windows).toEqual([]);
   });
 
   test('tolerates string numbers and missing timestamps', () => {
-    const parsed = parseMuseKeyPayload(
+    const parsed = parseMetaKeyPayload(
       keyResponse({
         subs_usage: {
           window: { used_percent: '50', window_duration_mins: '60' },
@@ -92,24 +92,24 @@ describe('Muse quota parsing', () => {
   });
 });
 
-describe('Muse quota wiring', () => {
-  test('resolves muse files and registers the adapter', () => {
-    expect(resolveAuthProvider({ name: 'm.json', type: 'muse' })).toBe('muse');
-    expect(isMuseFile({ name: 'm.json', type: 'muse' } as never)).toBeTrue();
-    expect(isMuseFile({ name: 'k.json', type: 'kimi' } as never)).toBeFalse();
-    expect(QUOTA_ADAPTERS.muse.type).toBe('muse');
-    expect(QUOTA_ADAPTERS.muse.i18nPrefix).toBe('muse_quota');
+describe('Meta quota wiring', () => {
+  test('resolves meta files and registers the adapter', () => {
+    expect(resolveAuthProvider({ name: 'm.json', type: 'meta' })).toBe('meta');
+    expect(isMetaFile({ name: 'm.json', type: 'meta' } as never)).toBeTrue();
+    expect(isMetaFile({ name: 'k.json', type: 'kimi' } as never)).toBeFalse();
+    expect(QUOTA_ADAPTERS.meta.type).toBe('meta');
+    expect(QUOTA_ADAPTERS.meta.i18nPrefix).toBe('meta_quota');
   });
 
   test('uses the key endpoint with version header and empty probe body', () => {
-    expect(MUSE_KEY_URL).toBe('https://api.meta.ai/muse-code/key');
-    expect(MUSE_REQUEST_HEADERS['x-api-version']).toBe('1.0.0');
-    expect(MUSE_REQUEST_HEADERS.Authorization).toContain('$TOKEN$');
+    expect(META_KEY_URL).toBe('https://api.meta.ai/muse-code/key');
+    expect(META_REQUEST_HEADERS['x-api-version']).toBe('1.0.0');
+    expect(META_REQUEST_HEADERS.Authorization).toContain('$TOKEN$');
   });
 
-  test('provides muse_quota translations', () => {    const authLogin = (
+  test('provides meta_quota translations', () => {    const authLogin = (
       en as unknown as Record<string, Record<string, string>>
-    ).muse_quota;
+    ).meta_quota;
     for (const key of [
       'title',
       'refresh_button',
@@ -126,19 +126,19 @@ describe('Muse quota wiring', () => {
   });
 });
 
-describe('Muse timeline lane', () => {
+describe('Meta timeline lane', () => {
   test('renders translated, unique limit labels', () => {
     const lane = buildTimelineLane({
-      name: 'muse.json',
-      displayName: 'muse@example.com',
-      provider: 'muse',
+      name: 'meta.json',
+      displayName: 'meta@example.com',
+      provider: 'meta',
       quota: {
         status: 'success',
         rows: [
           {
             id: '300m',
             label: 'Rolling window (5h)',
-            labelKey: 'muse_quota.rolling_window_hours',
+            labelKey: 'meta_quota.rolling_window_hours',
             used: 12.5,
             limit: 100,
             resetAtMs: Date.now() + 3600_000,
@@ -147,7 +147,7 @@ describe('Muse timeline lane', () => {
           {
             id: '1w',
             label: 'Weekly',
-            labelKey: 'muse_quota.weekly',
+            labelKey: 'meta_quota.weekly',
             used: 34,
             limit: 100,
             resetAtMs: Date.now() + 86400_000,
@@ -163,7 +163,7 @@ describe('Muse timeline lane', () => {
   });
 });
 
-describe('Muse quota page wiring', () => {
+describe('Meta quota page wiring', () => {
   test('every quota tab type resolves to an adapter slice that exists', async () => {
     const { QUOTA_TAB_ORDER } = await import('../src/features/quota/constants');
     const { useQuotaStore } = await import('../src/stores/useQuotaStore');
@@ -177,15 +177,15 @@ describe('Muse quota page wiring', () => {
       expect(slice).toBeDefined();
       expect(typeof state[adapter.storeSetter]).toBe('function');
     }
-    expect(QUOTA_TAB_ORDER).toContain('muse');
+    expect(QUOTA_TAB_ORDER).toContain('meta');
   });
 });
 
-describe('Muse empty-payload guard', () => {
+describe('Meta empty-payload guard', () => {
   test('degenerate bodies without windows or identity still error', async () => {
-    const { parseMuseKeyPayload } = await import('../src/utils/quota/muse');
-    expect(parseMuseKeyPayload({})).toBeNull();
-    expect(parseMuseKeyPayload({ is_subs_active: true })).toBeNull();
-    expect(parseMuseKeyPayload({ subs_usage: null })).toBeNull();
+    const { parseMetaKeyPayload } = await import('../src/utils/quota/meta');
+    expect(parseMetaKeyPayload({})).toBeNull();
+    expect(parseMetaKeyPayload({ is_subs_active: true })).toBeNull();
+    expect(parseMetaKeyPayload({ subs_usage: null })).toBeNull();
   });
 });
