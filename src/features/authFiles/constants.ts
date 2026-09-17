@@ -11,7 +11,6 @@ import iconGrokDark from '@/assets/icons/grok-dark.svg';
 import iconIflow from '@/assets/icons/iflow.svg';
 import iconKimiDark from '@/assets/icons/kimi-dark.svg';
 import iconKimiLight from '@/assets/icons/kimi-light.svg';
-import iconMuse from '@/assets/icons/muse.svg';
 import iconOpencode from '@/assets/icons/opencode.svg';
 import iconQwen from '@/assets/icons/qwen.svg';
 import iconZai from '@/assets/icons/zai.svg';
@@ -31,7 +30,7 @@ export type AuthFileModelItem = {
 export type AuthFileIconAsset = string | { light: string; dark: string };
 
 export type QuotaProviderType =
-  'antigravity' | 'claude' | 'codex' | 'devin' | 'kimi' | 'meta' | 'muse' | 'opencode' | 'zai' | 'xai';
+  'antigravity' | 'claude' | 'codex' | 'devin' | 'kimi' | 'meta' | 'opencode' | 'zai' | 'xai';
 export type AuthFileQuotaFilter = QuotaProviderType | 'all' | null;
 export type OAuthConfigLoadError = 'loading' | 'unsupported' | 'load' | null;
 
@@ -42,7 +41,7 @@ export const QUOTA_PROVIDER_TYPES = new Set<QuotaProviderType>([
   'codex',
   'devin',
   'kimi',
-  'muse',
+  'meta',
   'opencode',
   'zai',
   'xai',
@@ -58,7 +57,7 @@ export const OAUTH_PROVIDER_PRESETS = [
   'codex',
   'devin',
   'kimi',
-  'muse',
+  'meta',
   'opencode',
   'zai',
 ];
@@ -79,7 +78,7 @@ export const AUTH_FILE_MANUAL_REFRESH_PROVIDERS = new Set([
   'claude',
   'codex',
   'kimi',
-  'muse',
+  'meta',
   'zai',
   'xai',
 ]);
@@ -98,7 +97,6 @@ export const AUTH_FILE_ICONS: Record<string, AuthFileIconAsset> = {
   xai: { light: iconGrok, dark: iconGrokDark },
   iflow: iconIflow,
   kimi: { light: iconKimiDark, dark: iconKimiLight },
-  muse: iconMuse,
   opencode: iconOpencode,
   zai: iconZai,
   qwen: iconQwen,
