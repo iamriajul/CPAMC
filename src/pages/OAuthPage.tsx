@@ -24,7 +24,6 @@ import iconClaude from '@/assets/icons/claude.svg';
 import iconAntigravity from '@/assets/icons/antigravity.svg';
 import iconKimiLight from '@/assets/icons/kimi-light.svg';
 import iconKimiDark from '@/assets/icons/kimi-dark.svg';
-import iconMuse from '@/assets/icons/muse.svg';
 import iconOpencode from '@/assets/icons/opencode.svg';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconZai from '@/assets/icons/zai.svg';
@@ -112,12 +111,6 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
     id: 'kimi',
     titleKey: 'auth_login.kimi_oauth_title',
     icon: { light: iconKimiDark, dark: iconKimiLight },
-  },
-  {
-    kind: 'builtin',
-    id: 'muse',
-    titleKey: 'auth_login.muse_oauth_title',
-    icon: iconMuse,
   },
   {
     kind: 'builtin',

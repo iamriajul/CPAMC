@@ -23,7 +23,7 @@ const FILES: AuthFileItem[] = [
   file('kimi-a.json', 'kimi'),
   file('codex-b.json', 'codex'),
   file('grok-a.json', 'grok'), // 别名归一到 xai
-  file('muse-a.json', 'muse'),
+  file('meta-a.json', 'meta'),
   file('opencode-a.json', 'opencode'),
   file('zai-a.json', 'zai'),
   file('gemini-a.json', 'gemini'), // 不支持额度
@@ -66,7 +66,7 @@ describe('classifyQuotaFiles', () => {
       'codex',
       'xai',
       'kimi',
-      'muse',
+      'meta',
       'opencode',
       'zai',
     ]);
@@ -83,8 +83,7 @@ describe('buildTabCounts', () => {
       xai: 1,
       kimi: 1,
       devin: 0,
-      meta: 0,
-      muse: 1,
+      meta: 1,
       opencode: 1,
       zai: 1,
     });
@@ -216,7 +215,7 @@ describe('sortQuotaEntries', () => {
         'kimi-a.json': 200,
         'codex-b.json': 400,
         'grok-a.json': 50,
-        'muse-a.json': 150,
+        'meta-a.json': 150,
         'opencode-a.json': 120,
         'zai-a.json': 250,
       })
@@ -225,7 +224,7 @@ describe('sortQuotaEntries', () => {
       'grok-a.json',
       'claude-a.json',
       'opencode-a.json',
-      'muse-a.json',
+      'meta-a.json',
       'kimi-a.json',
       'zai-a.json',
       'codex-a.json',
@@ -247,7 +246,7 @@ describe('sortQuotaEntries', () => {
       'claude-a.json',
       'codex-a.json',
       'grok-a.json',
-      'muse-a.json',
+      'meta-a.json',
       'opencode-a.json',
       'zai-a.json',
     ]);

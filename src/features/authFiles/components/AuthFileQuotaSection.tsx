@@ -50,7 +50,6 @@ export function AuthFileQuotaSection(props: AuthFileQuotaSectionProps) {
     if (quotaType === 'devin') return state.devinQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'kimi') return state.kimiQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'meta') return state.metaQuota[cacheKey] as QuotaCardState | undefined;
-    if (quotaType === 'muse') return state.museQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'opencode') return state.opencodeQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'zai') return state.zaiQuota[cacheKey] as QuotaCardState | undefined;
     if (quotaType === 'xai') return state.xaiQuota[cacheKey] as QuotaCardState | undefined;
