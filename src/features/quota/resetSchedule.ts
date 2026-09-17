@@ -178,7 +178,7 @@ export function collectQuotaRowInstants(
       }));
   }
 
-  if (provider === 'muse' || provider === 'opencode' || provider === 'zai') {
+  if (provider === 'opencode' || provider === 'zai') {
     return collectRows((quota as { rows?: WindowLike[] }).rows ?? [], 'row');
   }
 
