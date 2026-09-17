@@ -25,8 +25,6 @@ import { KIMI_CONFIG } from './kimi/data';
 import { KimiQuotaBody } from './kimi/KimiQuotaBody';
 import { PLUGIN_CONFIG } from './plugin/data';
 import { PluginQuotaBody } from './plugin/PluginQuotaBody';
-import { MUSE_CONFIG } from './muse/data';
-import { MuseQuotaBody } from './muse/MuseQuotaBody';
 import { OPENCODE_CONFIG } from './opencode/data';
 import { OpencodeQuotaBody } from './opencode/OpencodeQuotaBody';
 import { ZAI_CONFIG } from './zai/data';
@@ -68,7 +66,6 @@ export const QUOTA_ADAPTERS: Record<QuotaProviderType, QuotaAdapter> = {
   kimi: { ...KIMI_CONFIG, Body: KimiQuotaBody } as unknown as QuotaAdapter,
   meta: { ...META_CONFIG, Body: MetaQuotaBody } as unknown as QuotaAdapter,
   plugin: { ...PLUGIN_CONFIG, Body: PluginQuotaBody } as unknown as QuotaAdapter,
-  muse: { ...MUSE_CONFIG, Body: MuseQuotaBody } as unknown as QuotaAdapter,
   opencode: { ...OPENCODE_CONFIG, Body: OpencodeQuotaBody } as unknown as QuotaAdapter,
   zai: { ...ZAI_CONFIG, Body: ZaiQuotaBody } as unknown as QuotaAdapter,
   xai: { ...XAI_CONFIG, Body: XaiQuotaBody } as unknown as QuotaAdapter,
