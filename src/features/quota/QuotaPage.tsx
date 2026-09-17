@@ -132,7 +132,6 @@ export function QuotaPage() {
   const devinQuota = useQuotaStore((state) => state.devinQuota);
   const kimiQuota = useQuotaStore((state) => state.kimiQuota);
   const metaQuota = useQuotaStore((state) => state.metaQuota);
-  const museQuota = useQuotaStore((state) => state.museQuota);
   const opencodeQuota = useQuotaStore((state) => state.opencodeQuota);
   const zaiQuota = useQuotaStore((state) => state.zaiQuota);
   const xaiQuota = useQuotaStore((state) => state.xaiQuota);
@@ -146,7 +145,6 @@ export function QuotaPage() {
         devin: devinQuota,
         kimi: kimiQuota,
         meta: metaQuota,
-        muse: museQuota,
         opencode: opencodeQuota,
         zai: zaiQuota,
         xai: xaiQuota,
@@ -154,7 +152,7 @@ export function QuotaPage() {
         // without wiring its map here fails type-check instead of crashing
         // the page at runtime reading [file.name] off undefined.
       }) satisfies Record<QuotaProviderType, Record<string, QuotaCardState>>,
-    [antigravityQuota, claudeQuota, codexQuota, devinQuota, kimiQuota, metaQuota, museQuota, opencodeQuota, zaiQuota, xaiQuota]
+    [antigravityQuota, claudeQuota, codexQuota, devinQuota, kimiQuota, metaQuota, opencodeQuota, zaiQuota, xaiQuota]
   );
 
   const getQuota = useCallback(
