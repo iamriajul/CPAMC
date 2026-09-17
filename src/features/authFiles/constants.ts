@@ -12,7 +12,6 @@ import iconGrokDark from '@/assets/icons/grok-dark.svg';
 import iconIflow from '@/assets/icons/iflow.svg';
 import iconKimiDark from '@/assets/icons/kimi-dark.svg';
 import iconKimiLight from '@/assets/icons/kimi-light.svg';
-import iconMuse from '@/assets/icons/muse.svg';
 import iconOpencode from '@/assets/icons/opencode.svg';
 import iconQwen from '@/assets/icons/qwen.svg';
 import iconZai from '@/assets/icons/zai.svg';
@@ -39,7 +38,6 @@ export type QuotaProviderType =
   | 'devin'
   | 'kimi'
   | 'meta'
-  | 'muse'
   | 'opencode'
   | 'zai'
   | 'plugin'
@@ -56,7 +54,6 @@ export const QUOTA_PROVIDER_TYPES = new Set<QuotaProviderType>([
   'devin',
   'kimi',
   'plugin',
-  'muse',
   'opencode',
   'zai',
   'xai',
@@ -73,7 +70,7 @@ export const OAUTH_PROVIDER_PRESETS = [
   'codex',
   'devin',
   'kimi',
-  'muse',
+  'meta',
   'opencode',
   'zai',
 ];
@@ -95,7 +92,7 @@ export const AUTH_FILE_MANUAL_REFRESH_PROVIDERS = new Set([
   'claude',
   'codex',
   'kimi',
-  'muse',
+  'meta',
   'zai',
   'xai',
 ]);
@@ -115,7 +112,6 @@ export const AUTH_FILE_ICONS: Record<string, AuthFileIconAsset> = {
   xai: { light: iconGrok, dark: iconGrokDark },
   iflow: iconIflow,
   kimi: { light: iconKimiDark, dark: iconKimiLight },
-  muse: iconMuse,
   opencode: iconOpencode,
   zai: iconZai,
   qwen: iconQwen,

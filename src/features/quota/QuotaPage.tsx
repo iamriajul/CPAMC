@@ -147,7 +147,6 @@ export function QuotaPage() {
   const copilotQuota = useQuotaStore((state) => state.copilotQuota);
   const metaQuota = useQuotaStore((state) => state.metaQuota);
   const pluginQuota = useQuotaStore((state) => state.pluginQuota);
-  const museQuota = useQuotaStore((state) => state.museQuota);
   const opencodeQuota = useQuotaStore((state) => state.opencodeQuota);
   const zaiQuota = useQuotaStore((state) => state.zaiQuota);
   const xaiQuota = useQuotaStore((state) => state.xaiQuota);
@@ -163,7 +162,6 @@ export function QuotaPage() {
         copilot: copilotQuota,
         meta: metaQuota,
         plugin: pluginQuota,
-        muse: museQuota,
         opencode: opencodeQuota,
         zai: zaiQuota,
         xai: xaiQuota,
@@ -179,7 +177,6 @@ export function QuotaPage() {
       kimiQuota,
       copilotQuota,
       metaQuota,
-      museQuota,
       opencodeQuota,
       zaiQuota,
       pluginQuota,
