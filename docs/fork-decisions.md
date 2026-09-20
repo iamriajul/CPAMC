@@ -24,29 +24,6 @@ without your change. A decision with no command is a decision nothing
 protects. Changes confined to fork-owned files (no upstream counterpart)
 cannot conflict on sync and need no section.
 
-## meta-oauth-panel
-
-**Meta OAuth login card is upstream's; the fork keeps only the legacy alias
-normalization**
-
-Upstream v1.24.0 shipped their own Meta provider (OAuth card, quota adapter,
-DCA-token fetcher, i18n), absorbing what this fork had built on the v1.23.1
-base — so the fork's own Meta OAuth card and quota panel were retired in that
-sync, and the Meta card you see in the panel is upstream's code. What the
-fork still owns: legacy `muse` / `muse-code` / `muse_code` / `musecode`
-aliases normalize to `meta` in both the OAuth provider key and the
-management-path key (backend `NormalizeOAuthProvider` maps the same set), so
-auth files saved under the retired fork lane keep working, and meta appears
-in the auth-file filter presets. The fork's old `muse` quota lane is gone and
-must stay gone: no `muse` quota provider, adapter, or tab may reappear.
-
-```bash
-bun test tests/metaOAuth.test.ts
-grep -q "muse: 'meta'" src/utils/providerKeys.ts
-! grep -q "muse" src/features/quota/providers/index.ts
-! grep -q "'muse'" src/features/quota/constants.ts
-```
-
 ## opencode-zai-panel
 
 **OpenCode key import + Z.AI OAuth cards and both quota adapters**
