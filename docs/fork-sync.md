@@ -3,9 +3,8 @@
 This fork keeps a rebase queue shape: `main` is an upstream release tag plus
 one commit per fork change, with no merge commits of our own. A GitHub
 ruleset (`general-practices`, targeting the default branch) enforces it —
-direct pushes, merge commits, and squash merges are rejected, and
-`pullfrog-approval` is a required check — so routine changes land as
-rebase-merged PRs. Note the upstream tag itself may contain merge commits
+merge commits and non-fast-forward pushes are rejected, and `pullfrog-approval`
+is a required check. Note the upstream tag itself may contain merge commits
 from upstream's own dev branch (e.g. `aba373a` inside v1.23.1); tag history
 is inherited as-is and the ruleset is evaluated only on what we push.
 
@@ -66,8 +65,7 @@ the ruleset normally rejects, so:
    re-evaluate — do not blindly overwrite).
 2. As a repo admin, temporarily set the `general-practices` ruleset
    enforcement to `disabled` via the API, push immediately, then set it
-   back to `active` and verify. Keep the window to minutes.
-3. Verify the landed `main`: `git rev-list --merges --count
+   back to `active` and verify. Keep the window to minutes.3. Verify the landed `main`: `git rev-list --merges --count
    <tag>..origin/main` must show no merge commits beyond any the upstream
    tag itself already contained.
 
@@ -86,7 +84,7 @@ Upstream owns the low patch range, so never mint below `900` on a shared
 line forward to the next minor first. The `v*` tag build publishes
 `management.html` to the fork's GitHub Release; the proxy picks it up via
 `panel-github-repository`. Version bumps live in the tag — never land
-version churn on a feature PR.
+version churn as a separate queue commit.
 
 ## What not to do
 
