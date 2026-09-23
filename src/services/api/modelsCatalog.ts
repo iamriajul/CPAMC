@@ -23,6 +23,12 @@ export interface ModelsCatalogRefresh {
   changed: string[];
 }
 
+/** Transport seam: production passes the shared client, tests pass a stub. */
+export interface ModelsCatalogTransport {
+  get: (url: string) => Promise<unknown>;
+  post: (url: string, body: unknown) => Promise<unknown>;
+}
+
 export const normalizeCatalogProvider = (value: unknown): ModelsCatalogProvider | null => {
   if (!isRecord(value)) return null;
   const rawId = value.id;
@@ -54,17 +60,19 @@ export const normalizeCatalogStatus = (value: unknown): ModelsCatalogStatus => {
   };
 };
 
-export const modelsCatalogApi = {
+export const createModelsCatalogApi = (transport: ModelsCatalogTransport = apiClient) => ({
   getStatus: async (): Promise<ModelsCatalogStatus> => {
-    const payload = await apiClient.get<unknown>('/modelsdev/status');
+    const payload = await transport.get('/modelsdev/status');
     return normalizeCatalogStatus(payload);
   },
   refresh: async (): Promise<ModelsCatalogRefresh> => {
-    const payload = await apiClient.post<unknown>('/modelsdev/refresh', {});
+    const payload = await transport.post('/modelsdev/refresh', {});
     const changed =
       isRecord(payload) && Array.isArray(payload.changed)
         ? payload.changed.filter((entry): entry is string => typeof entry === 'string')
         : [];
     return { changed };
   },
-};
+});
+
+export const modelsCatalogApi = createModelsCatalogApi();
