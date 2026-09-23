@@ -13,6 +13,8 @@ const PROVIDER_LABELS: Record<string, string> = {
   vertex: 'Vertex AI',
   openai: 'OpenAI Compatible',
   'openai-compatibility': 'OpenAI Compatible',
+  'opencode-go': 'OpenCode Go',
+  'zai-coding-plan': 'Z.AI Coding Plan',
   qwen: 'Qwen',
   kimi: 'Kimi',
   iflow: 'iFlow',
@@ -73,4 +75,20 @@ export function axisMax(peak: number, intervals: number): number {
   if (peak <= 0 || intervals <= 0) return Math.max(1, intervals);
   const step = Math.max(1, Math.ceil(niceCeil(peak / intervals)));
   return step * intervals;
+}
+
+/**
+ * 紧凑时长（"12m"/"3h"/"2d"），用于目录新鲜度；非法输入返回 null。
+ */
+export function formatCatalogAge(fetchedAt: string | null, now: number = Date.now()): string | null {
+  if (!fetchedAt) return null;
+  const parsed = Date.parse(fetchedAt);
+  if (Number.isNaN(parsed)) return null;
+  const seconds = Math.max(0, Math.floor((now - parsed) / 1000));
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  return `${Math.floor(hours / 24)}d`;
 }

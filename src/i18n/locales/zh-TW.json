@@ -200,7 +200,19 @@
     "cta_system_desc": "版本詳情與管理中心資訊。",
     "window_m": "{{minutes}} 分鐘",
     "window_h": "{{hours}} 小時",
-    "window_hm": "{{hours}} 小時 {{minutes}} 分"
+    "window_hm": "{{hours}} 小時 {{minutes}} 分",
+    "catalog_eyebrow": "模型目錄",
+    "catalog_title": "模型新鮮度",
+    "catalog_live": "即時",
+    "catalog_fallback": "快照",
+    "catalog_lanes": "{{count}} 個模型",
+    "catalog_updated_ago": "更新於 {{age}} 前",
+    "catalog_never_fetched": "從未獲取",
+    "catalog_fetch_failed": "獲取失敗：{{error}}",
+    "catalog_loading": "正在載入目錄…",
+    "catalog_empty": "暫無目錄資料",
+    "catalog_refresh": "立即重新整理",
+    "catalog_refreshing": "重新整理中…"
   },
   "basic_settings": {
     "debug_enable": "啟用除錯模式",

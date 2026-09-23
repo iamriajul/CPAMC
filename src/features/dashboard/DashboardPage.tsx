@@ -13,12 +13,19 @@ import { useAuthStore } from '@/stores';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { formatCompactNumber, formatDateValue, formatPercent } from '@/utils/format';
 import { useDashboardOverview } from './hooks/useDashboardOverview';
+import { useModelsCatalog } from './hooks/useModelsCatalog';
 import { LiveWire } from './components/LiveWire';
 import { Meter } from './components/Meter';
 import { Sparkline } from './components/Sparkline';
 import { ThroughputChart } from './components/ThroughputChart';
 import { useCountUp, useRevealGroup, useRevealOnScroll } from '@/hooks/motion';
-import { providerLabel, splitWindowMinutes, toneForSuccessRate, type MeterTone } from './utils';
+import {
+  formatCatalogAge,
+  providerLabel,
+  splitWindowMinutes,
+  toneForSuccessRate,
+  type MeterTone,
+} from './utils';
 import styles from './dashboard.module.scss';
 
 const DASH = '—';
@@ -42,6 +49,7 @@ export function DashboardPage() {
 
   const { connectionStatus, connected, config, counts, traffic, providers, credentials, refresh } =
     useDashboardOverview();
+  const catalog = useModelsCatalog();
 
   useHeaderRefresh(refresh, connected);
 
@@ -510,6 +518,62 @@ export function DashboardPage() {
           )}
           <Link to="/config" className={styles.panelLink}>
             {t('dashboard.runtime_link')}{' '}
+            <span className={styles.linkArrow} aria-hidden="true">
+              →
+            </span>
+          </Link>
+        </div>
+
+        <div className={styles.panel} data-reveal>
+          <header className={styles.panelHead}>
+            <span className={styles.eyebrow}>{t('dashboard.catalog_eyebrow')}</span>
+            <h2 className={styles.panelTitle}>{t('dashboard.catalog_title')}</h2>
+          </header>
+          {catalog.loading ? (
+            <p className={styles.emptyNote}>{t('dashboard.catalog_loading')}</p>
+          ) : catalog.providers.length === 0 ? (
+            <p className={styles.emptyNote}>{catalog.error ?? t('dashboard.catalog_empty')}</p>
+          ) : (
+            <dl className={styles.specList}>
+              {catalog.providers.map((provider) => {
+                const live = provider.source === 'live';
+                const age = formatCatalogAge(provider.fetchedAt);
+                const detail = provider.lastError
+                  ? t('dashboard.catalog_fetch_failed', { error: provider.lastError })
+                  : age
+                    ? t('dashboard.catalog_updated_ago', { age })
+                    : t('dashboard.catalog_never_fetched');
+                return (
+                  <div key={provider.id} className={styles.specRow}>
+                    <dt className={styles.specLabel}>
+                      <i
+                        className={`${styles.healthKey} ${live ? styles.healthActive : styles.healthUnavailable}`}
+                        aria-hidden="true"
+                      />
+                      {providerLabel(provider.id, provider.id)}
+                    </dt>
+                    <dd className={styles.specValue}>
+                      {live ? t('dashboard.catalog_live') : t('dashboard.catalog_fallback')}
+                      {' · '}
+                      {t('dashboard.catalog_lanes', { count: provider.models })}
+                      {' · '}
+                      {detail}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+          )}
+          <button
+            type="button"
+            className={styles.catalogRefresh}
+            onClick={() => void catalog.refreshNow()}
+            disabled={catalog.refreshing || catalog.loading}
+          >
+            {catalog.refreshing ? t('dashboard.catalog_refreshing') : t('dashboard.catalog_refresh')}
+          </button>
+          <Link to="/ai-providers" className={styles.panelLink}>
+            {t('nav.ai_providers')}{' '}
             <span className={styles.linkArrow} aria-hidden="true">
               →
             </span>

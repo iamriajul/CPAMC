@@ -199,7 +199,19 @@
     "cta_system_desc": "Информация о версии и центре управления.",
     "window_m": "{{minutes}} мин",
     "window_h": "{{hours}} ч",
-    "window_hm": "{{hours}} ч {{minutes}} мин"
+    "window_hm": "{{hours}} ч {{minutes}} мин",
+    "catalog_eyebrow": "Каталог моделей",
+    "catalog_title": "Свежесть каталога",
+    "catalog_live": "live",
+    "catalog_fallback": "снапшот",
+    "catalog_lanes": "{{count}} моделей",
+    "catalog_updated_ago": "обновлено {{age}} назад",
+    "catalog_never_fetched": "не запрашивалось",
+    "catalog_fetch_failed": "ошибка: {{error}}",
+    "catalog_loading": "Загрузка каталога…",
+    "catalog_empty": "Нет данных каталога",
+    "catalog_refresh": "Обновить",
+    "catalog_refreshing": "Обновление…"
   },
   "basic_settings": {
     "debug_enable": "Включить режим отладки",
