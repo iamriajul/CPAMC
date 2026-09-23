@@ -524,6 +524,7 @@ export function DashboardPage() {
           </Link>
         </div>
 
+        {catalog.supported && (
         <div className={styles.panel} data-reveal>
           <header className={styles.panelHead}>
             <span className={styles.eyebrow}>{t('dashboard.catalog_eyebrow')}</span>
@@ -550,7 +551,7 @@ export function DashboardPage() {
                         className={`${styles.healthKey} ${live ? styles.healthActive : styles.healthUnavailable}`}
                         aria-hidden="true"
                       />
-                      {providerLabel(provider.id, provider.id)}
+                      {providerLabel(provider.id, unknownProviderLabel)}
                     </dt>
                     <dd className={styles.specValue}>
                       {live ? t('dashboard.catalog_live') : t('dashboard.catalog_fallback')}
@@ -579,6 +580,7 @@ export function DashboardPage() {
             </span>
           </Link>
         </div>
+        )}
       </section>
 
       {/* ---------- CTA ---------- */}

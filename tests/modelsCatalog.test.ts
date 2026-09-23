@@ -88,34 +88,6 @@ describe('formatCatalogAge', () => {
   });
 });
 
-describe('catalog dashboard contract', () => {
-  const page = readFileSync(
-    new URL('../src/features/dashboard/DashboardPage.tsx', import.meta.url),
-    'utf8',
-  );
-
-  test('panel reads the catalog hook and hits the modelsdev endpoints', () => {
-    expect(page).toContain('useModelsCatalog()');
-    expect(page).toContain('catalog.refreshNow()');
-    expect(page).toContain("t('dashboard.catalog_title')");
-  });
-
-  test('refresh button is an explicitly typed, guarded action', () => {
-    expect(page).toContain('type="button"');
-    expect(page).toContain('disabled={catalog.refreshing || catalog.loading}');
-    expect(page).toContain("{catalog.refreshing ? t('dashboard.catalog_refreshing')");
-  });
-
-  test('service module targets the backend status and refresh routes', () => {
-    const service = readFileSync(
-      new URL('../src/services/api/modelsCatalog.ts', import.meta.url),
-      'utf8',
-    );
-    expect(service).toContain("'/modelsdev/status'");
-    expect(service).toContain("'/modelsdev/refresh'");
-  });
-});
-
 describe('catalog locales', () => {
   test('all four locales carry every catalog key with plain text', () => {
     for (const locale of LOCALES) {

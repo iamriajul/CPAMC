@@ -577,10 +577,6 @@
       color: var(--background-primary);
     }
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 /* ---------- 供应商列表 ---------- */
