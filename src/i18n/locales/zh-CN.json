@@ -200,7 +200,19 @@
     "cta_system_desc": "版本详情与管理中心信息。",
     "window_m": "{{minutes}} 分钟",
     "window_h": "{{hours}} 小时",
-    "window_hm": "{{hours}} 小时 {{minutes}} 分"
+    "window_hm": "{{hours}} 小时 {{minutes}} 分",
+    "catalog_eyebrow": "模型目录",
+    "catalog_title": "模型新鲜度",
+    "catalog_live": "实时",
+    "catalog_fallback": "快照",
+    "catalog_lanes": "{{count}} 个模型",
+    "catalog_updated_ago": "更新于 {{age}} 前",
+    "catalog_never_fetched": "从未获取",
+    "catalog_fetch_failed": "获取失败：{{error}}",
+    "catalog_loading": "正在加载目录…",
+    "catalog_empty": "暂无目录数据",
+    "catalog_refresh": "立即刷新",
+    "catalog_refreshing": "刷新中…"
   },
   "basic_settings": {
     "debug_enable": "启用调试模式",

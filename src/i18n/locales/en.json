@@ -200,7 +200,19 @@
     "cta_system_desc": "Version details and management center info.",
     "window_m": "{{minutes}}m",
     "window_h": "{{hours}}h",
-    "window_hm": "{{hours}}h {{minutes}}m"
+    "window_hm": "{{hours}}h {{minutes}}m",
+    "catalog_eyebrow": "Model catalog",
+    "catalog_title": "Models.dev freshness",
+    "catalog_live": "live",
+    "catalog_fallback": "fallback",
+    "catalog_lanes": "{{count}} models",
+    "catalog_updated_ago": "updated {{age}} ago",
+    "catalog_never_fetched": "never fetched",
+    "catalog_fetch_failed": "fetch failed: {{error}}",
+    "catalog_loading": "Loading catalog…",
+    "catalog_empty": "No catalog data",
+    "catalog_refresh": "Refresh now",
+    "catalog_refreshing": "Refreshing…"
   },
   "basic_settings": {
     "debug_enable": "Enable Debug Mode",
