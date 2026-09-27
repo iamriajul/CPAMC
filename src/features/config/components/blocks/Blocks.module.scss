@@ -594,3 +594,11 @@
     transition: none;
   }
 }
+
+/* web-search provider 多选网格：自适应列，窄屏回落单列。 */
+.providerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px 14px;
+  padding: 4px 0;
+}
