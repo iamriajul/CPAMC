@@ -25,11 +25,14 @@ import { DEFAULT_VISUAL_VALUES } from '@/types/visualConfig';
 const INDEX_FIELD_IDS = CONFIG_FIELD_SEARCH_INDEX.map((entry) => entry.fieldId);
 const INDEX_FIELD_ID_SET = new Set(INDEX_FIELD_IDS);
 
-/** VisualConfigValues 的叶值键：顶层标量 + streaming 展开为点号叶（= dirtyFields 的键域）。 */
+/** VisualConfigValues 的叶值键：顶层标量 + 嵌套分组（streaming / webSearch）展开为点号叶。 */
+const NESTED_VALUE_GROUPS = ['streaming', 'webSearch'] as const;
 const LEAF_VALUE_KEYS = new Set(
   Object.keys(DEFAULT_VISUAL_VALUES).flatMap((key) =>
-    key === 'streaming'
-      ? Object.keys(DEFAULT_VISUAL_VALUES.streaming).map((leaf) => `streaming.${leaf}`)
+    (NESTED_VALUE_GROUPS as readonly string[]).includes(key)
+      ? Object.keys(DEFAULT_VISUAL_VALUES[key as 'streaming' | 'webSearch']).map(
+          (leaf) => `${key}.${leaf}`
+        )
       : [key]
   )
 );
