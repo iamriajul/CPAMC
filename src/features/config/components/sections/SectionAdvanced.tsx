@@ -6,6 +6,7 @@ import { SelectionCheckbox } from '@/components/ui/SelectionCheckbox';
 import { WEB_SEARCH_PROVIDERS, type WebSearchConfig } from '@/types/visualConfig';
 import { CONFIG_TAB_ICONS, SECTION_INDEX_LABELS } from '../../constants';
 import type { ConfigSectionProps } from '../../types';
+import type { VisualConfigValidationErrors } from '@/types/visualConfig';
 import { SectionCard } from '../SectionCard';
 import {
   Divider,
@@ -18,6 +19,7 @@ import {
   FieldStack,
   ToggleRow,
 } from '../fields/FieldPrimitives';
+import { getValidationMessage } from '../blocks/shared';
 import { PluginStoreAuthEditor } from '../blocks/PluginStoreAuthEditor';
 import type { PluginStoreAuthRule } from '@/types/visualConfig';
 import { StringListEditor } from '../blocks/StringListEditor';
@@ -26,7 +28,13 @@ import blocks from '../blocks/Blocks.module.scss';
 const Icon = CONFIG_TAB_ICONS.advanced;
 
 /** 06 高级与实验：插件源、供应商敏感词、签名缓存、代理侧联网搜索与请求头默认值。 */
-export function SectionAdvanced({ values, disabled, animateIn, onChange }: ConfigSectionProps) {
+export function SectionAdvanced({
+  values,
+  validationErrors,
+  disabled,
+  animateIn,
+  onChange,
+}: ConfigSectionProps) {
   const { t } = useTranslation();
 
   const handlePluginStoreSourcesChange = useCallback(
@@ -163,6 +171,7 @@ export function SectionAdvanced({ values, disabled, animateIn, onChange }: Confi
         </Collapsible>
         <Divider />
         <WebSearchCollapsible
+          validationErrors={validationErrors}
           value={values.webSearch}
           disabled={disabled}
           onChange={(webSearch) => onChange({ webSearch: { ...values.webSearch, ...webSearch } })}
@@ -313,14 +322,31 @@ function WebSearchKeyField({
 
 function WebSearchCollapsible({
   value,
+  validationErrors,
   disabled,
   onChange,
 }: {
   value: WebSearchConfig;
+  validationErrors?: VisualConfigValidationErrors;
   disabled?: boolean;
   onChange: (patch: Partial<WebSearchConfig>) => void;
 }) {
   const { t } = useTranslation();
+  // int 字段：setIntFromStringInDoc 会静默丢弃非数字输入，不提示的话
+  // 保存报成功但值没有落盘。
+  const webSearchErrors = {
+    timeoutSeconds: getValidationMessage(t, validationErrors?.['webSearch.timeoutSeconds']),
+    limit: getValidationMessage(t, validationErrors?.['webSearch.limit']),
+    maxSearches: getValidationMessage(t, validationErrors?.['webSearch.maxSearches']),
+    publicFanoutSoftSeconds: getValidationMessage(
+      t,
+      validationErrors?.['webSearch.publicFanoutSoftSeconds']
+    ),
+    publicFanoutHardSeconds: getValidationMessage(
+      t,
+      validationErrors?.['webSearch.publicFanoutHardSeconds']
+    ),
+  };
   return (
     <Collapsible
       label={t('config_management.visual.sections.websearch.title')}
@@ -407,6 +433,7 @@ function WebSearchCollapsible({
                 <FieldShell
                   label={t('config_management.visual.sections.websearch.timeout_seconds')}
                   hint={t('config_management.visual.sections.websearch.timeout_seconds_hint')}
+                  error={webSearchErrors.timeoutSeconds}
                 >
                   <Input
                     type="number"
@@ -423,6 +450,7 @@ function WebSearchCollapsible({
                 <FieldShell
                   label={t('config_management.visual.sections.websearch.limit')}
                   hint={t('config_management.visual.sections.websearch.limit_hint')}
+                  error={webSearchErrors.limit}
                 >
                   <Input
                     type="number"
@@ -438,6 +466,7 @@ function WebSearchCollapsible({
                 <FieldShell
                   label={t('config_management.visual.sections.websearch.max_searches')}
                   hint={t('config_management.visual.sections.websearch.max_searches_hint')}
+                  error={webSearchErrors.maxSearches}
                 >
                   <Input
                     type="number"
@@ -453,6 +482,7 @@ function WebSearchCollapsible({
                 <FieldShell
                   label={t('config_management.visual.sections.websearch.public_soft')}
                   hint={t('config_management.visual.sections.websearch.public_soft_hint')}
+                  error={webSearchErrors.publicFanoutSoftSeconds}
                 >
                   <Input
                     type="number"
@@ -468,6 +498,7 @@ function WebSearchCollapsible({
                 <FieldShell
                   label={t('config_management.visual.sections.websearch.public_hard')}
                   hint={t('config_management.visual.sections.websearch.public_hard_hint')}
+                  error={webSearchErrors.publicFanoutHardSeconds}
                 >
                   <Input
                     type="number"

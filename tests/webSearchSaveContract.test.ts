@@ -122,3 +122,26 @@ describe('web-search review fixes', () => {
     }
   });
 });
+
+describe('web-search validation reaches the fields', () => {
+  test('each int field renders its own validation message', () => {
+    // 只在类型系统里注册校验是不够的：错误必须经 FieldShell 的 error
+    // 属性真正渲染到字段上，否则用户看不到、保存仍会静默丢值。
+    for (const key of [
+      'timeoutSeconds',
+      'limit',
+      'maxSearches',
+      'publicFanoutSoftSeconds',
+      'publicFanoutHardSeconds',
+    ]) {
+      expect(SECTION).toContain(`error={webSearchErrors.${key}}`);
+    }
+  });
+
+  test('the collapsible receives validationErrors', () => {
+    // 字段渲染在 WebSearchCollapsible 内部：不把 validationErrors 传下去，
+    // 上面的 error 属性会引用一个不在作用域里的变量。
+    expect(SECTION).toMatch(/WebSearchCollapsible[\s\S]{0,200}validationErrors=\{validationErrors\}/);
+    expect(SECTION).toMatch(/function WebSearchCollapsible\(\{[\s\S]{0,200}validationErrors\?:/);
+  });
+});
