@@ -16,7 +16,10 @@ import type {
   VisualConfigValidationErrors,
   PayloadParamValidationErrorCode,
 } from '@/types/visualConfig';
-import { DEFAULT_VISUAL_VALUES } from '@/types/visualConfig';
+import {
+  DEFAULT_VISUAL_VALUES,
+  type WebSearchConfig,
+} from '@/types/visualConfig';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return null;
@@ -635,11 +638,174 @@ function parsePayloadFilterRules(rules: unknown): PayloadFilterRule[] {
 
     const models = parsePayloadModelEntries(record.models, `filter-model-${index}`);
 
+
     const paramsRaw = record.params;
     const params = Array.isArray(paramsRaw) ? paramsRaw.map(String) : [];
 
     return { id: `payload-filter-rule-${index}`, models, params };
   });
+}
+
+/** web-search 的全部叶值键；dirtyFields 域为 `webSearch.<leaf>`。 */
+const WEB_SEARCH_LEAF_KEYS = [
+  'enabled',
+  'order',
+  'exclude',
+  'timeoutSeconds',
+  'limit',
+  'maxSearches',
+  'publicFanoutSoftSeconds',
+  'publicFanoutHardSeconds',
+  'perplexityApiKey',
+  'perplexityOauthToken',
+  'openRouterApiKey',
+  'geminiApiKey',
+  'anthropicApiKey',
+  'xaiApiKey',
+  'codexApiKey',
+  'zaiApiKey',
+  'exaApiKey',
+  'tinyfishApiKey',
+  'jinaApiKey',
+  'kagiApiKey',
+  'tavilyApiKey',
+  'firecrawlApiKey',
+  'braveApiKey',
+  'kimiApiKey',
+  'parallelApiKey',
+  'syntheticApiKey',
+  'ollamaApiKey',
+  'searxngEndpoint',
+  'searxngToken',
+  'searxngUsername',
+  'searxngPassword',
+  'geminiSearchModel',
+  'anthropicSearchModel',
+  'xaiSearchModel',
+  'codexSearchModel',
+  'geminiBaseUrl',
+  'anthropicBaseUrl',
+  'xaiBaseUrl',
+  'codexBaseUrl',
+  'firecrawlBaseUrl',
+] as const satisfies readonly (keyof WebSearchConfig)[];
+
+/**
+ * 敏感叶值 → YAML 键。后端把密钥的 json tag 标为 "-"，故 GET /config
+ * 永不带明文；基线为空串，只有用户在此处输入才会写回。
+ */
+const WEB_SEARCH_SECRET_YAML_KEYS: Partial<Record<keyof WebSearchConfig, string>> = {
+  perplexityApiKey: 'perplexity-api-key',
+  perplexityOauthToken: 'perplexity-oauth-token',
+  geminiApiKey: 'gemini-api-key',
+  anthropicApiKey: 'anthropic-api-key',
+  xaiApiKey: 'xai-api-key',
+  codexApiKey: 'codex-api-key',
+  openRouterApiKey: 'openrouter-api-key',
+  zaiApiKey: 'zai-api-key',
+  exaApiKey: 'exa-api-key',
+  tinyfishApiKey: 'tinyfish-api-key',
+  jinaApiKey: 'jina-api-key',
+  kagiApiKey: 'kagi-api-key',
+  tavilyApiKey: 'tavily-api-key',
+  firecrawlApiKey: 'firecrawl-api-key',
+  braveApiKey: 'brave-api-key',
+  kimiApiKey: 'kimi-api-key',
+  parallelApiKey: 'parallel-api-key',
+  syntheticApiKey: 'synthetic-api-key',
+  ollamaApiKey: 'ollama-api-key',
+  searxngToken: 'searxng-token',
+  searxngPassword: 'searxng-password',
+};
+
+/** 非敏感叶值 → YAML 键。 */
+/**
+ * 后端声明为 int 的 web-search YAML 键。UI 里是字符串输入框，写回时必须
+ * 走 int setter：yaml 库会把字符串加引号输出，而后端在落盘前先
+ * unmarshal 整个配置，引号数字会让保存整体失败。
+ */
+const WEB_SEARCH_INT_YAML_KEYS: Record<string, true> = {
+  'timeout-seconds': true,
+  'limit': true,
+  'max-searches': true,
+  'public-fanout-soft-seconds': true,
+  'public-fanout-hard-seconds': true,
+};
+
+const WEB_SEARCH_PLAIN_YAML_KEYS: Partial<Record<keyof WebSearchConfig, string>> = {
+  order: 'order',
+  exclude: 'exclude',
+  timeoutSeconds: 'timeout-seconds',
+  limit: 'limit',
+  maxSearches: 'max-searches',
+  publicFanoutSoftSeconds: 'public-fanout-soft-seconds',
+  publicFanoutHardSeconds: 'public-fanout-hard-seconds',
+  searxngEndpoint: 'searxng-endpoint',
+  searxngUsername: 'searxng-username',
+  geminiSearchModel: 'gemini-search-model',
+  anthropicSearchModel: 'anthropic-search-model',
+  xaiSearchModel: 'xai-search-model',
+  codexSearchModel: 'codex-search-model',
+  geminiBaseUrl: 'gemini-base-url',
+  anthropicBaseUrl: 'anthropic-base-url',
+  xaiBaseUrl: 'xai-base-url',
+  codexBaseUrl: 'codex-base-url',
+  firecrawlBaseUrl: 'firecrawl-base-url',
+};
+
+function parseWebSearchConfig(raw: Record<string, unknown> | null): WebSearchConfig {
+  if (!raw) return { ...DEFAULT_VISUAL_VALUES.webSearch };
+  const str = (key: string): string =>
+    typeof raw[key] === 'string' ? (raw[key] as string) : '';
+  return {
+    enabled: Boolean(raw.enabled),
+    order: parseStringList(raw.order),
+    exclude: parseStringList(raw.exclude),
+    timeoutSeconds: raw['timeout-seconds'] === undefined ? '' : String(raw['timeout-seconds']),
+    limit: raw.limit === undefined ? '' : String(raw.limit),
+    maxSearches: raw['max-searches'] === undefined ? '' : String(raw['max-searches']),
+    publicFanoutSoftSeconds:
+      raw['public-fanout-soft-seconds'] === undefined
+        ? ''
+        : String(raw['public-fanout-soft-seconds']),
+    publicFanoutHardSeconds:
+      raw['public-fanout-hard-seconds'] === undefined
+        ? ''
+        : String(raw['public-fanout-hard-seconds']),
+    // 密钥永不由服务端回显，故基线恒为空串（空 = 保存时不覆盖）。
+    perplexityApiKey: '',
+    perplexityOauthToken: '',
+    geminiApiKey: '',
+    anthropicApiKey: '',
+    xaiApiKey: '',
+    codexApiKey: '',
+    openRouterApiKey: '',
+    zaiApiKey: '',
+    exaApiKey: '',
+    tinyfishApiKey: '',
+    jinaApiKey: '',
+    kagiApiKey: '',
+    tavilyApiKey: '',
+    firecrawlApiKey: '',
+    braveApiKey: '',
+    kimiApiKey: '',
+    parallelApiKey: '',
+    syntheticApiKey: '',
+    ollamaApiKey: '',
+    searxngEndpoint: str('searxng-endpoint'),
+    searxngToken: '',
+    searxngUsername: str('searxng-username'),
+    searxngPassword: '',
+    geminiSearchModel: str('gemini-search-model'),
+    anthropicSearchModel: str('anthropic-search-model'),
+    xaiSearchModel: str('xai-search-model'),
+    codexSearchModel: str('codex-search-model'),
+    geminiBaseUrl: str('gemini-base-url'),
+    anthropicBaseUrl: str('anthropic-base-url'),
+    xaiBaseUrl: str('xai-base-url'),
+    codexBaseUrl: str('codex-base-url'),
+    firecrawlBaseUrl: str('firecrawl-base-url'),
+  };
 }
 
 function parseRawPayloadRules(rules: unknown): PayloadRule[] {
@@ -1204,6 +1370,17 @@ function getNextDirtyFields(
       );
     }
   }
+  if (patch.webSearch) {
+    for (const leaf of WEB_SEARCH_LEAF_KEYS) {
+      if (!Object.prototype.hasOwnProperty.call(patch.webSearch, leaf)) continue;
+      const nextValue = nextValues.webSearch[leaf];
+      const baselineValue = baselineValues.webSearch[leaf];
+      const isEqual = Array.isArray(nextValue)
+        ? areStringArraysEqual(nextValue, baselineValue as string[] | undefined)
+        : nextValue === baselineValue;
+      updateDirty(`webSearch.${leaf}`, isEqual);
+    }
+  }
 
   return nextDirtyFields;
 }
@@ -1284,13 +1461,13 @@ export function useVisualConfig() {
       const remoteManagement = asRecord(parsed['remote-management']);
       const quotaExceeded = asRecord(parsed['quota-exceeded']);
       const routing = asRecord(parsed.routing);
-      const payload = asRecord(parsed.payload);
       const streaming = asRecord(parsed.streaming);
       const plugins = asRecord(parsed.plugins);
       const antigravity = asRecord(parsed.antigravity);
       const devin = asRecord(parsed.devin);
       const claudeHeaderDefaults = asRecord(parsed['claude-header-defaults']);
       const codexHeaderDefaults = asRecord(parsed['codex-header-defaults']);
+      const payload = asRecord(parsed.payload);
 
       const newValues: VisualConfigValues = {
         host: typeof parsed.host === 'string' ? parsed.host : '',
@@ -1412,6 +1589,8 @@ export function useVisualConfig() {
           bootstrapRetries: String(streaming?.['bootstrap-retries'] ?? ''),
           nonstreamKeepaliveInterval: String(parsed['nonstream-keepalive-interval'] ?? ''),
         },
+
+        webSearch: parseWebSearchConfig(asRecord(parsed['web-search'])),
       };
 
       dispatch({ type: 'load_success', values: newValues });
@@ -1625,6 +1804,34 @@ export function useVisualConfig() {
             values.antigravitySignatureBypassStrict
           );
         }
+        // web-search：空串密钥表示“不覆盖”，与服务端不回显密钥的约定一致。
+        const webSearchLeaves = WEB_SEARCH_LEAF_KEYS.filter((leaf) =>
+          dirtyFields.has(`webSearch.${leaf}`)
+        );
+        if (webSearchLeaves.length > 0) {
+          ensureMapInDoc(doc, ['web-search']);
+        }
+        for (const leaf of webSearchLeaves) {
+          if (leaf === 'enabled') {
+            setBooleanInDoc(doc, ['web-search', 'enabled'], values.webSearch.enabled);
+            continue;
+          }
+          const yamlKey = WEB_SEARCH_SECRET_YAML_KEYS[leaf] ?? WEB_SEARCH_PLAIN_YAML_KEYS[leaf];
+          if (!yamlKey) continue;
+          const next = values.webSearch[leaf];
+          if (typeof next === 'string' && next === '') continue; // 空 = 不覆盖
+          if (Array.isArray(next)) {
+            setStringListInDoc(doc, ['web-search', yamlKey], next);
+          } else if (WEB_SEARCH_INT_YAML_KEYS[yamlKey] !== undefined) {
+            // 后端声明为 int：引号包裹的数字会让 yaml.Unmarshal 拒绝整个
+            // 配置文件（PutConfigYAML 在写入前先解析），不止这一个字段。
+            setIntFromStringInDoc(doc, ['web-search', yamlKey], next);
+          } else {
+            setStringInDoc(doc, ['web-search', yamlKey], next);
+          }
+        }
+        deleteIfMapEmpty(doc, ['web-search']);
+
 
         const claudeHeadersDirty =
           dirtyFields.has('claudeHeaderUserAgent') ||
