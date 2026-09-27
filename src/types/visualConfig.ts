@@ -37,7 +37,12 @@ export type VisualConfigFieldPath =
   | 'authAutoRefreshWorkers'
   | 'streaming.keepaliveSeconds'
   | 'streaming.bootstrapRetries'
-  | 'streaming.nonstreamKeepaliveInterval';
+  | 'streaming.nonstreamKeepaliveInterval'
+  | 'webSearch.timeoutSeconds'
+  | 'webSearch.limit'
+  | 'webSearch.maxSearches'
+  | 'webSearch.publicFanoutSoftSeconds'
+  | 'webSearch.publicFanoutHardSeconds';
 
 export type VisualConfigValidationErrorCode =
   | 'invalid_trusted_proxies'
@@ -116,6 +121,81 @@ export type PluginStoreAuthRule = {
 };
 
 /** UI draft keys; YAML persistence uses the v8 tree, not these flattened names. */
+
+/** 内置搜索后端；顺序即 chain 中的尝试顺序（无凭据者自动跳过）。 */
+export const WEB_SEARCH_PROVIDERS = [
+  { id: 'perplexity', requiresKey: false },
+  { id: 'gemini', requiresKey: true },
+  { id: 'anthropic', requiresKey: true },
+  { id: 'codex', requiresKey: true },
+  { id: 'xai', requiresKey: true },
+  { id: 'zai', requiresKey: true },
+  { id: 'exa', requiresKey: false },
+  { id: 'tinyfish', requiresKey: true },
+  { id: 'jina', requiresKey: true },
+  { id: 'kagi', requiresKey: true },
+  { id: 'tavily', requiresKey: true },
+  { id: 'firecrawl', requiresKey: false },
+  { id: 'brave', requiresKey: true },
+  { id: 'kimi', requiresKey: true },
+  { id: 'parallel', requiresKey: false },
+  { id: 'synthetic', requiresKey: true },
+  { id: 'ollama', requiresKey: true },
+  { id: 'searxng', requiresKey: true },
+  { id: 'startpage', requiresKey: false },
+  { id: 'duckduckgo', requiresKey: false },
+  { id: 'ecosia', requiresKey: false },
+  { id: 'google', requiresKey: false },
+  { id: 'mojeek', requiresKey: false },
+  { id: 'public', requiresKey: false },
+] as const;
+
+export type WebSearchProviderId = (typeof WEB_SEARCH_PROVIDERS)[number]['id'];
+
+/** 代理侧 web search。密钥一律 password 输入；后端 json tag 为 "-" 故不回显。 */
+export interface WebSearchConfig {
+  enabled: boolean;
+  order: string[];
+  exclude: string[];
+  timeoutSeconds: string;
+  limit: string;
+  maxSearches: string;
+  publicFanoutSoftSeconds: string;
+  publicFanoutHardSeconds: string;
+  perplexityApiKey: string;
+  perplexityOauthToken: string;
+  geminiApiKey: string;
+  anthropicApiKey: string;
+  xaiApiKey: string;
+  openRouterApiKey: string;
+  codexApiKey: string;
+  zaiApiKey: string;
+  exaApiKey: string;
+  tinyfishApiKey: string;
+  jinaApiKey: string;
+  kagiApiKey: string;
+  tavilyApiKey: string;
+  firecrawlApiKey: string;
+  braveApiKey: string;
+  kimiApiKey: string;
+  parallelApiKey: string;
+  syntheticApiKey: string;
+  ollamaApiKey: string;
+  searxngEndpoint: string;
+  searxngToken: string;
+  searxngUsername: string;
+  searxngPassword: string;
+  geminiSearchModel: string;
+  anthropicSearchModel: string;
+  xaiSearchModel: string;
+  codexSearchModel: string;
+  geminiBaseUrl: string;
+  anthropicBaseUrl: string;
+  xaiBaseUrl: string;
+  codexBaseUrl: string;
+  firecrawlBaseUrl: string;
+}
+
 export type VisualConfigValues = {
   githubToken: string;
   trustedProxies: string[];
@@ -214,6 +294,7 @@ export type VisualConfigValues = {
   payloadOverrideRawRules: PayloadRule[];
   payloadFilterRules: PayloadFilterRule[];
   streaming: StreamingConfig;
+  webSearch: WebSearchConfig;
 };
 
 export const makeClientId = () => {
@@ -320,5 +401,47 @@ export const DEFAULT_VISUAL_VALUES: VisualConfigValues = {
     keepaliveSeconds: '',
     bootstrapRetries: '',
     nonstreamKeepaliveInterval: '',
+  },
+  webSearch: {
+    enabled: false,
+    order: [],
+    exclude: [],
+    timeoutSeconds: '',
+    limit: '',
+    maxSearches: '',
+    publicFanoutSoftSeconds: '',
+    publicFanoutHardSeconds: '',
+    perplexityApiKey: '',
+    perplexityOauthToken: '',
+    geminiApiKey: '',
+    anthropicApiKey: '',
+    xaiApiKey: '',
+    openRouterApiKey: '',
+    codexApiKey: '',
+    zaiApiKey: '',
+    exaApiKey: '',
+    tinyfishApiKey: '',
+    jinaApiKey: '',
+    kagiApiKey: '',
+    tavilyApiKey: '',
+    firecrawlApiKey: '',
+    braveApiKey: '',
+    kimiApiKey: '',
+    parallelApiKey: '',
+    syntheticApiKey: '',
+    ollamaApiKey: '',
+    searxngEndpoint: '',
+    searxngToken: '',
+    searxngUsername: '',
+    searxngPassword: '',
+    geminiSearchModel: '',
+    anthropicSearchModel: '',
+    xaiSearchModel: '',
+    codexSearchModel: '',
+    geminiBaseUrl: '',
+    anthropicBaseUrl: '',
+    xaiBaseUrl: '',
+    codexBaseUrl: '',
+    firecrawlBaseUrl: '',
   },
 };
