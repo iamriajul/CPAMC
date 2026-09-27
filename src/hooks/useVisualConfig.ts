@@ -216,6 +216,17 @@ export function getVisualConfigValidationErrors(
     'streaming.nonstreamKeepaliveInterval': getIntegerError(
       values.streaming.nonstreamKeepaliveInterval
     ),
+    // web-search 的 int 字段：setIntFromStringInDoc 会静默丢弃非数字，
+    // 若不拦截，保存会报成功但值根本没落盘。
+    'webSearch.timeoutSeconds': getNonNegativeIntegerError(values.webSearch.timeoutSeconds),
+    'webSearch.limit': getNonNegativeIntegerError(values.webSearch.limit),
+    'webSearch.maxSearches': getNonNegativeIntegerError(values.webSearch.maxSearches),
+    'webSearch.publicFanoutSoftSeconds': getNonNegativeIntegerError(
+      values.webSearch.publicFanoutSoftSeconds
+    ),
+    'webSearch.publicFanoutHardSeconds': getNonNegativeIntegerError(
+      values.webSearch.publicFanoutHardSeconds
+    ),
   };
 }
 
@@ -1819,13 +1830,20 @@ export function useVisualConfig() {
           const yamlKey = WEB_SEARCH_SECRET_YAML_KEYS[leaf] ?? WEB_SEARCH_PLAIN_YAML_KEYS[leaf];
           if (!yamlKey) continue;
           const next = values.webSearch[leaf];
-          if (typeof next === 'string' && next === '') continue; // 空 = 不覆盖
+          const isSecret = WEB_SEARCH_SECRET_YAML_KEYS[leaf] !== undefined;
+          // Only a secret is skipped when blank: the backend never echoes
+          // one back, so an empty box means "leave what is on disk alone".
+          // A plain field set to empty is a deliberate clear, and skipping
+          // it would leave the stale value in the file and on reload.
+          if (isSecret && typeof next === 'string' && next === '') continue;
           if (Array.isArray(next)) {
             setStringListInDoc(doc, ['web-search', yamlKey], next);
           } else if (WEB_SEARCH_INT_YAML_KEYS[yamlKey] !== undefined) {
             // 后端声明为 int：引号包裹的数字会让 yaml.Unmarshal 拒绝整个
             // 配置文件（PutConfigYAML 在写入前先解析），不止这一个字段。
             setIntFromStringInDoc(doc, ['web-search', yamlKey], next);
+          } else if (typeof next === 'string' && next === '') {
+            doc.deleteIn(['web-search', yamlKey]);
           } else {
             setStringInDoc(doc, ['web-search', yamlKey], next);
           }

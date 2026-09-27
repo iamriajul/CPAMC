@@ -15,6 +15,19 @@ import { join } from 'node:path';
 import { DEFAULT_VISUAL_VALUES } from '@/types/visualConfig';
 
 const SOURCE = readFileSync(join(import.meta.dir, '..', 'src', 'hooks', 'useVisualConfig.ts'), 'utf8');
+const SECTION = readFileSync(
+  join(
+    import.meta.dir,
+    '..',
+    'src',
+    'features',
+    'config',
+    'components',
+    'sections',
+    'SectionAdvanced.tsx'
+  ),
+  'utf8'
+);
 
 /** 取出源码里导出的三个 web-search 清单，保持与实现同源。 */
 function readList(name: string): string[] {
@@ -78,5 +91,34 @@ describe('web-search save contract', () => {
     const branch = SOURCE.slice(SOURCE.indexOf('for (const leaf of webSearchLeaves)'));
     expect(branch).toContain('WEB_SEARCH_INT_YAML_KEYS[yamlKey] !== undefined');
     expect(branch).not.toContain('WEB_SEARCH_INT_YAML_KEYS[yamlKey] === undefined');
+  });
+});
+
+describe('web-search review fixes', () => {
+  test('a cleared plain field is deleted, not left stale', () => {
+    // 空串跳过只适用于密钥：后端不回显密钥，空=保持原值；但普通字段
+    // 被清空是明确意图，保留旧值会在重载后复活。
+    expect(SOURCE).toContain('const isSecret = WEB_SEARCH_SECRET_YAML_KEYS[leaf] !== undefined;');
+    expect(SOURCE).toContain('if (isSecret && typeof next === \'string\' && next === \'\') continue;');
+    expect(SOURCE).toContain('doc.deleteIn([\'web-search\', yamlKey])');
+  });
+
+  test('credential fields default to masked', () => {
+    // secret 默认 false 时，19 个未显式传参的凭据字段会渲染成明文输入框。
+    const start = SECTION.indexOf('function WebSearchKeyField');
+    expect(start, 'WebSearchKeyField not found').toBeGreaterThan(-1);
+    expect(SECTION.slice(start, start + 400)).toContain('secret = true');
+  });
+
+  test('int fields are validated so a typo cannot save silently', () => {
+    for (const path of [
+      'webSearch.timeoutSeconds',
+      'webSearch.limit',
+      'webSearch.maxSearches',
+      'webSearch.publicFanoutSoftSeconds',
+      'webSearch.publicFanoutHardSeconds',
+    ]) {
+      expect(SOURCE).toContain(`'${path}': getNonNegativeIntegerError(`);
+    }
   });
 });

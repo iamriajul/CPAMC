@@ -233,9 +233,9 @@ export function SectionAdvanced({ values, disabled, animateIn, onChange }: Confi
               </FieldAnchor>
               <FieldAnchor fieldId="claudeHeaderStabilizeDeviceProfile">
                 <ToggleRow
-                  title={t('config_management.visual.sections.headers.stabilize_device_profile')}
+                  title={t('config_management.visual.sections.headers.stabilize_device')}
                   description={t(
-                    'config_management.visual.sections.headers.stabilize_device_profile_desc'
+                    'config_management.visual.sections.headers.stabilize_device_desc'
                   )}
                   checked={values.claudeHeaderStabilizeDeviceProfile}
                   disabled={disabled}
@@ -279,7 +279,9 @@ function WebSearchKeyField({
   fieldId,
   labelKey,
   placeholder,
-  secret = false,
+  // 凭据默认遮蔽：漏写 secret 的调用点不再渲染明文密钥。非敏感字段
+  // （端点、用户名、模型名）显式传 secret={false}。
+  secret = true,
   value,
   onChange,
   disabled,

@@ -17,7 +17,12 @@ export type VisualConfigFieldPath =
   | 'authAutoRefreshWorkers'
   | 'streaming.keepaliveSeconds'
   | 'streaming.bootstrapRetries'
-  | 'streaming.nonstreamKeepaliveInterval';
+  | 'streaming.nonstreamKeepaliveInterval'
+  | 'webSearch.timeoutSeconds'
+  | 'webSearch.limit'
+  | 'webSearch.maxSearches'
+  | 'webSearch.publicFanoutSoftSeconds'
+  | 'webSearch.publicFanoutHardSeconds';
 
 export type VisualConfigValidationErrorCode =
   'port_range' | 'integer' | 'non_negative_integer' | 'integer_range_1_3600';

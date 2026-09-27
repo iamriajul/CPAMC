@@ -80,7 +80,13 @@ export const SECTION_VALIDATION_FIELDS: Record<VisualSectionId, readonly VisualC
       'streaming.bootstrapRetries',
       'streaming.nonstreamKeepaliveInterval',
     ],
-    advanced: [],
+    advanced: [
+      'webSearch.timeoutSeconds',
+      'webSearch.limit',
+      'webSearch.maxSearches',
+      'webSearch.publicFanoutSoftSeconds',
+      'webSearch.publicFanoutHardSeconds',
+    ],
     payload: [],
   };
 
