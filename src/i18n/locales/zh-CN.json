@@ -1904,7 +1904,9 @@
       "modelsDevProviderAuto": "自动（按 Base URL 推断）",
       "modelsDevProviderAutoDetected": "已自动采用 models.dev 提供商“{{provider}}”的数据。",
       "modelsDevProviderUnavailable": "models.dev 未收录该模型。不会向客户端声明上下文长度或推理档位。",
-      "modelsDevProviderLoading": "正在查询 models.dev…"
+      "modelsDevProviderLoading": "正在查询 models.dev…",
+      "modelsDevProviderUnknown": "已不在目录中",
+      "modelsDevProviderStaleHint": "已保存的提供商不在目录中。可以保留，或另选一个；清空则改回按 Base URL 推断。"
     },
     "delete": {
       "title": "删除资源",

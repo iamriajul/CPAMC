@@ -1930,7 +1930,9 @@
       "modelsDevProviderAuto": "自動（依 Base URL 推斷）",
       "modelsDevProviderAutoDetected": "已自動採用 models.dev 供應商「{{provider}}」的資料。",
       "modelsDevProviderUnavailable": "models.dev 未收錄該模型。不會向客戶端宣告上下文長度或推理級別。",
-      "modelsDevProviderLoading": "正在查詢 models.dev…"
+      "modelsDevProviderLoading": "正在查詢 models.dev…",
+      "modelsDevProviderUnknown": "已不在目錄中",
+      "modelsDevProviderStaleHint": "已儲存的供應商不在目錄中。可以保留，或另選一個；清空則改回依 Base URL 推斷。"
     },
     "delete": {
       "title": "刪除資源",

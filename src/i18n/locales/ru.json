@@ -1900,7 +1900,9 @@
       "modelsDevProviderAuto": "Автоматически (по base URL)",
       "modelsDevProviderAutoDetected": "Автоматически применён провайдер models.dev «{{provider}}».",
       "modelsDevProviderUnavailable": "Модели нет в models.dev. Окно контекста и уровни рассуждения объявляться не будут.",
-      "modelsDevProviderLoading": "Проверка models.dev…"
+      "modelsDevProviderLoading": "Проверка models.dev…",
+      "modelsDevProviderUnknown": "больше нет в каталоге",
+      "modelsDevProviderStaleHint": "Сохранённый провайдер отсутствует в каталоге. Оставьте его или выберите другой; очистка вернёт выбор по base URL."
     },
     "delete": {
       "title": "Удалить ресурс",

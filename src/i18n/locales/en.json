@@ -1906,7 +1906,9 @@
       "modelsDevProviderAuto": "Automatic (use base URL)",
       "modelsDevProviderAutoDetected": "Applied automatically from models.dev provider \"{{provider}}\".",
       "modelsDevProviderUnavailable": "Not listed in models.dev. No limits or reasoning levels will be advertised for this model.",
-      "modelsDevProviderLoading": "Checking models.dev…"
+      "modelsDevProviderLoading": "Checking models.dev…",
+      "modelsDevProviderUnknown": "no longer in the catalog",
+      "modelsDevProviderStaleHint": "The saved provider is not in the catalog. Keep it, or pick another — clearing returns to the base URL."
     },
     "delete": {
       "title": "Delete resource",

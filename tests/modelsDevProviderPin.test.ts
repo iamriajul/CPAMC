@@ -4,6 +4,7 @@ import { createModelsDevProvidersApi } from '../src/services/api/modelsdevProvid
 import { providersApi } from '../src/services/api/providers';
 import { normalizeConfigResponse } from '../src/services/api/transformers';
 
+import { pickerFallsBackToDropdown } from '../src/features/providers/sheets/forms/ModelsDevProviderPicker';
 const originalGet = apiClient.get;
 const originalPut = apiClient.put;
 
@@ -172,5 +173,27 @@ describe('models.dev provider lookup', () => {
 
     const result = await api.list('m');
     expect(result.providers[0].context_length).toBe(262144);
+  });
+});
+
+// The picker collapses to a text hint only when the catalog resolves the model
+// on its own. The pure decision is exported from the component so this
+// regression is covered without a DOM harness.
+describe('models.dev provider picker visibility rule', () => {
+  test('a stored pin is never hidden from the operator', () => {
+    // The catalog knows one provider and it is not the stored pin: the pin
+    // must stay visible and changeable rather than being swallowed by the
+    // "applied automatically" hint.
+    expect(pickerFallsBackToDropdown(['alpha'], 'beta')).toBe(true);
+    // The catalog knows one provider and the pin matches it: unambiguous.
+    expect(pickerFallsBackToDropdown(['alpha'], 'alpha')).toBe(false);
+    // The catalog knows one provider and nothing is pinned: nothing to choose.
+    expect(pickerFallsBackToDropdown(['alpha'], '')).toBe(false);
+    // The catalog is empty but a pin is stored: it is still being saved, so it
+    // must remain visible and clearable.
+    expect(pickerFallsBackToDropdown([], 'alpha')).toBe(true);
+    expect(pickerFallsBackToDropdown([], '')).toBe(false);
+    // Several providers always require a choice.
+    expect(pickerFallsBackToDropdown(['alpha', 'beta'], 'alpha')).toBe(true);
   });
 });
