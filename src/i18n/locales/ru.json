@@ -1894,7 +1894,13 @@
         "baseUrlRequired": "Base URL обязателен",
         "weightInteger": "Вес планирования должен быть целым числом",
         "weightMax": "Вес планирования не может превышать {{max}}"
-      }
+      },
+      "modelsDevProvider": "Источник данных о возможностях",
+      "modelsDevProviderHint": "Модель публикуют {{count}} провайдеров. Выберите совпадающий с вашей конечной точкой, иначе клиент получит неверные лимиты и уровни рассуждения.",
+      "modelsDevProviderAuto": "Автоматически (по base URL)",
+      "modelsDevProviderAutoDetected": "Автоматически применён провайдер models.dev «{{provider}}».",
+      "modelsDevProviderUnavailable": "Модели нет в models.dev. Окно контекста и уровни рассуждения объявляться не будут.",
+      "modelsDevProviderLoading": "Проверка models.dev…"
     },
     "delete": {
       "title": "Удалить ресурс",

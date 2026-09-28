@@ -911,6 +911,8 @@ export function BaseProviderForm({
               models={modelsList}
               supportsImage={supportsModelImage}
               supportsThinking
+              supportsModelsDevProvider={supportsModelImage}
+              providerBaseUrl={form.baseUrl}
               mutating={mutating}
               removeDisabled={modelsList.length <= 1}
               onUpdate={updateModelEntry}

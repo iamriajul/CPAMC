@@ -1924,7 +1924,13 @@
         "baseUrlRequired": "服務位址必填",
         "weightInteger": "調度權重必須是整數",
         "weightMax": "調度權重不能超過 {{max}}"
-      }
+      },
+      "modelsDevProvider": "能力資料來源",
+      "modelsDevProviderHint": "有 {{count}} 個供應商提供該模型。選擇與你的端點相符的那個，客戶端才能取得正確的上下文長度與推理級別。",
+      "modelsDevProviderAuto": "自動（依 Base URL 推斷）",
+      "modelsDevProviderAutoDetected": "已自動採用 models.dev 供應商「{{provider}}」的資料。",
+      "modelsDevProviderUnavailable": "models.dev 未收錄該模型。不會向客戶端宣告上下文長度或推理級別。",
+      "modelsDevProviderLoading": "正在查詢 models.dev…"
     },
     "delete": {
       "title": "刪除資源",

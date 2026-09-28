@@ -1900,7 +1900,13 @@
         "baseUrlRequired": "Base URL is required",
         "weightInteger": "Scheduling weight must be an integer",
         "weightMax": "Scheduling weight cannot exceed {{max}}"
-      }
+      },
+      "modelsDevProvider": "Capability source",
+      "modelsDevProviderHint": "{{count}} providers publish this model. Pick the one matching your endpoint so clients get the right limits and reasoning levels.",
+      "modelsDevProviderAuto": "Automatic (use base URL)",
+      "modelsDevProviderAutoDetected": "Applied automatically from models.dev provider \"{{provider}}\".",
+      "modelsDevProviderUnavailable": "Not listed in models.dev. No limits or reasoning levels will be advertised for this model.",
+      "modelsDevProviderLoading": "Checking models.dev…"
     },
     "delete": {
       "title": "Delete resource",

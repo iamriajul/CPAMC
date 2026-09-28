@@ -1898,7 +1898,13 @@
         "baseUrlRequired": "服务地址必填",
         "weightInteger": "调度权重必须是整数",
         "weightMax": "调度权重不能超过 {{max}}"
-      }
+      },
+      "modelsDevProvider": "能力数据来源",
+      "modelsDevProviderHint": "有 {{count}} 个提供商提供该模型。选择与你的端点匹配的那个，客户端才能拿到正确的上下文长度和推理档位。",
+      "modelsDevProviderAuto": "自动（按 Base URL 推断）",
+      "modelsDevProviderAutoDetected": "已自动采用 models.dev 提供商“{{provider}}”的数据。",
+      "modelsDevProviderUnavailable": "models.dev 未收录该模型。不会向客户端声明上下文长度或推理档位。",
+      "modelsDevProviderLoading": "正在查询 models.dev…"
     },
     "delete": {
       "title": "删除资源",

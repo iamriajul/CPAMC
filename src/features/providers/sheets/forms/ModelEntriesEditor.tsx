@@ -5,6 +5,7 @@ import { SelectionCheckbox } from '@/components/ui/SelectionCheckbox';
 import { THINKING_LEVELS, type ThinkingLevel } from '../../thinkingLevels';
 import type { ModelEntryInput } from '../../types';
 import styles from './sharedForm.module.scss';
+import { ModelsDevProviderPicker } from './ModelsDevProviderPicker';
 
 const COLLAPSED_LIMIT = 10;
 
@@ -16,6 +17,10 @@ interface ModelEntriesEditorProps {
   supportsThinking: boolean;
   mutating: boolean;
   removeDisabled: boolean;
+  /** Only OpenAI-compatible entries can pin a models.dev provider. */
+  supportsModelsDevProvider: boolean;
+  /** Provider base URL, used to rank the likely models.dev provider first. */
+  providerBaseUrl: string;
   onUpdate: (idx: number, patch: Partial<ModelEntryInput>) => void;
   onAdd: () => void;
   onRemove: (idx: number) => void;
@@ -28,6 +33,8 @@ export function ModelEntriesEditor({
   mutating,
   removeDisabled,
   onUpdate,
+  supportsModelsDevProvider,
+  providerBaseUrl,
   onAdd,
   onRemove,
 }: ModelEntriesEditorProps) {
@@ -56,7 +63,7 @@ export function ModelEntriesEditor({
   return (
     <>
       {visible.map((entry, idx) => {
-        const hasExtendedOptions = supportsImage || supportsThinking;
+        const hasExtendedOptions = supportsImage || supportsThinking || supportsModelsDevProvider;
         const expanded = hasExtendedOptions && expandedIdx === idx;
         const thinkingLevels = entry.thinkingLevels ?? [];
         const hasThinking = entry.thinkingLevelsTouched
@@ -174,6 +181,15 @@ export function ModelEntriesEditor({
                       </p>
                     ) : null}
                   </fieldset>
+                ) : null}
+                {supportsModelsDevProvider ? (
+                  <ModelsDevProviderPicker
+                    model={entry.name}
+                    value={entry.modelsDevProvider ?? ''}
+                    baseUrl={providerBaseUrl}
+                    disabled={mutating}
+                    onChange={(provider) => onUpdate(idx, { modelsDevProvider: provider })}
+                  />
                 ) : null}
               </div>
             ) : null}

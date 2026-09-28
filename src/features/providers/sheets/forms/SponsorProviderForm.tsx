@@ -314,6 +314,10 @@ function SponsorModelSection({
           models={modelsList}
           supportsImage={protocol === 'openai'}
           supportsThinking
+          // Sponsor brands route through their own gateway, so the
+          // models.dev provider picker does not apply to them.
+          supportsModelsDevProvider={false}
+          providerBaseUrl=""
           mutating={mutating}
           removeDisabled={modelsList.length <= 1}
           onUpdate={(modelIndex, patch) =>
