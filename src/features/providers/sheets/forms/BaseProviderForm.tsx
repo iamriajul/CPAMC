@@ -130,6 +130,7 @@ function buildInitialForm(
             image: m.image === true,
             thinkingJson: formatJsonObject(m.thinking),
             thinkingLevels: readThinkingLevels(m.thinking),
+            modelsDevProvider: m.modelsDevProvider ?? '',
           }))
         : [emptyModel()],
       headers: cfg.headers

@@ -10,6 +10,8 @@ export interface ModelAlias {
   testModel?: string;
   image?: boolean;
   thinking?: Record<string, unknown>;
+  /** models.dev provider whose catalog entry supplies this model's capabilities. */
+  modelsDevProvider?: string;
 }
 
 export interface ApiKeyEntry {

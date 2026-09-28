@@ -152,6 +152,14 @@ const buildModelAliases = (
       if (includeImage) {
         entry.image = m.image === true;
       }
+      if (includeImage) {
+        // models-dev-provider is an OpenAI-compatible-only field, gated by the
+        // same flag as image so other brands never emit it.
+        const modelsDevProvider = m.modelsDevProvider?.trim();
+        if (modelsDevProvider) {
+          entry.modelsDevProvider = modelsDevProvider;
+        }
+      }
       return entry;
     })
     .filter((m) => m.name);

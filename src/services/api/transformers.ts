@@ -35,6 +35,8 @@ const normalizeModelAliases = (models: unknown): ModelAlias[] => {
       const testModel = item['test-model'];
       const image = normalizeBoolean(item.image);
       const thinking = normalizeRecord(item.thinking);
+      const modelsDevProvider =
+        typeof item['models-dev-provider'] === 'string' ? item['models-dev-provider'].trim() : '';
       const entry: ModelAlias = { name: String(name) };
       if (alias && alias !== name) {
         entry.alias = String(alias);
@@ -53,6 +55,9 @@ const normalizeModelAliases = (models: unknown): ModelAlias[] => {
       }
       if (thinking) {
         entry.thinking = thinking;
+      }
+      if (modelsDevProvider) {
+        entry.modelsDevProvider = modelsDevProvider;
       }
       return entry;
     })

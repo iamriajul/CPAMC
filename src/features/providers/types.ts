@@ -140,6 +140,8 @@ export interface ModelEntryInput {
   thinkingJson?: string;
   thinkingLevels?: ThinkingLevel[];
   thinkingLevelsTouched?: boolean;
+  /** models.dev provider pin; empty means resolve from base-url or the sole publisher. */
+  modelsDevProvider?: string;
 }
 
 export type SponsorProtocol = 'openai' | 'codex' | 'claude' | 'gemini';
