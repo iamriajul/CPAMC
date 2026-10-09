@@ -55,3 +55,18 @@ grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
 ! grep -q "as unknown as Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
 bun run type-check
 ```
+
+## i18n-ko-vi-fork-keys
+
+**Fork-added English keys are mirrored into the Korean and Vietnamese locales**
+
+Upstream's `koreanLocale`/`vietnameseLocale` tests require every English key
+to exist in `ko.json`/`vi.json` with matching interpolation tokens. The
+fork's OpenCode/Z.AI panels, models.dev catalog panel, and web-search
+section add English keys, so the replay carries those keys into both files
+(English placeholder values until translated). Without them the upstream
+coverage tests fail.
+
+```bash
+bun test tests/koreanLocale.test.ts tests/vietnameseLocale.test.ts
+```
