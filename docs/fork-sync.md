@@ -63,9 +63,28 @@ the ruleset normally rejects, so:
 
 1. Confirm `origin/main` has not moved since the replay base (if it has,
    re-evaluate — do not blindly overwrite).
-2. As a repo admin, temporarily set the `general-practices` ruleset
-   enforcement to `disabled` via the API, push immediately, then set it
-   back to `active` and verify. Keep the window to minutes.3. Verify the landed `main`: `git rev-list --merges --count
+2. As a repo admin, temporarily set active rulesets (`general-practices`
+   and `strict-pullfrog-approval`) enforcement to `disabled` via the API,
+   push immediately, then set them back to `active` and verify. Keep the
+   window to minutes (PUT of full object with enforcement modified; partial
+   `-f` flags do not override `--input`):
+   ```bash
+   for id in $(gh api repos/{owner}/{repo}/rulesets --jq '.[] | select(.enforcement == "active") | .id'); do
+     gh api repos/{owner}/{repo}/rulesets/$id --method PUT --input - \
+       <<< "$(gh api repos/{owner}/{repo}/rulesets/$id | python3 -c "
+   import json,sys; d=json.load(sys.stdin); d['enforcement']='disabled'; print(json.dumps(d))")"
+   done
+   git push --force-with-lease origin HEAD:main
+   for id in $(gh api repos/{owner}/{repo}/rulesets --jq '.[] | select(.enforcement == "disabled") | .id'); do
+     gh api repos/{owner}/{repo}/rulesets/$id --method PUT --input - \
+       <<< "$(gh api repos/{owner}/{repo}/rulesets/$id | python3 -c "
+   import json,sys; d=json.load(sys.stdin); d['enforcement']='active'; print(json.dumps(d))")"
+   done
+   ```
+   (Legacy branch protection is not enabled on the fork — the branches API
+   returns 404 — so the ruleset above is the only enforcement; there is no
+   PR-landing path, force-with-lease is the landing method.)
+3. Verify the landed `main`: `git rev-list --merges --count
    <tag>..origin/main` must show no merge commits beyond any the upstream
    tag itself already contained.
 
