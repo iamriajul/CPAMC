@@ -65,7 +65,20 @@ the ruleset normally rejects, so:
    re-evaluate — do not blindly overwrite).
 2. As a repo admin, temporarily set the `general-practices` ruleset
    enforcement to `disabled` via the API, push immediately, then set it
-   back to `active` and verify. Keep the window to minutes.3. Verify the landed `main`: `git rev-list --merges --count
+   back to `active` and verify. Keep the window to minutes:
+   ```bash
+   RULESET_ID=$(gh api repos/{owner}/{repo}/rulesets --jq \
+     '.[] | select(.name == "general-practices") | .id')
+   gh api repos/{owner}/{repo}/rulesets/$RULESET_ID -X PUT \
+     -f enforcement=disabled --input <(gh api repos/{owner}/{repo}/rulesets/$RULESET_ID)
+   git push --force-with-lease origin HEAD:main
+   gh api repos/{owner}/{repo}/rulesets/$RULESET_ID -X PUT \
+     -f enforcement=active --input <(gh api repos/{owner}/{repo}/rulesets/$RULESET_ID)
+   ```
+   (Legacy branch protection is not enabled on the fork — the branches API
+   returns 404 — so the ruleset above is the only enforcement; there is no
+   PR-landing path, force-with-lease is the landing method.)
+3. Verify the landed `main`: `git rev-list --merges --count
    <tag>..origin/main` must show no merge commits beyond any the upstream
    tag itself already contained.
 
