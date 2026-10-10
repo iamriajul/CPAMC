@@ -6,18 +6,22 @@ import { useAuthStore, useThemeStore } from '@/stores';
 import iconVertex from '@/assets/icons/vertex.svg';
 import iconCodex from '@/assets/icons/codex.svg';
 import { KIMI_DISPLAY_NAME } from '@/features/providers/kimi';
+import { Collapsible } from '@/components/ui/Collapsible';
 import { OAuthHeader } from './components/OAuthHeader';
 import { ProviderTile } from './components/ProviderTile';
 import { SponsorCard, type SponsorCardSite } from './components/SponsorCard';
 import { OAuthFlowDialog, type DialogHeading } from './components/OAuthFlowDialog';
 import { VertexImportDialog } from './components/VertexImportDialog';
 import { SiwcBindDialog } from './components/SiwcBindDialog';
+import { KeyImportForm } from './components/KeyImportForm';
 import {
   useOAuthFlows,
   usePluginOAuthProviders,
   type ProviderFlowState,
 } from './hooks/useOAuthFlows';
 import { useVertexImport } from './hooks/useVertexImport';
+import { useKeyImport } from './hooks/useKeyImport';
+import { opencodeApi, zaiApi } from '@/services/api';
 import {
   isSponsor,
   OAUTH_PROVIDERS,
@@ -30,6 +34,7 @@ import styles from './OAuthPage.module.scss';
 /** 对话框焦点标识：Vertex 不是 OAuth 提供商，用保留 id 避免与提供商冲突。 */
 const VERTEX_DIALOG_ID = '__vertex__';
 const VERTEX_LABEL = 'Vertex AI';
+const ZAI_DASHBOARD_URL = 'https://z.ai/manage-apikey/apikey-list';
 
 type DialogTarget = { kind: 'oauth'; id: string } | { kind: 'vertex' };
 
@@ -71,6 +76,19 @@ export function OAuthPage() {
   const vertexImport = useVertexImport({
     isFocused: () => focusedRef.current === VERTEX_DIALOG_ID,
     onCredentialAdded: flows.recordCredentialAdded,
+  });
+  // 内联导入卡没有对话框：结果与 toast 都直接展示（沿用旧 OAuth 页行为）。
+  const zaiImport = useKeyImport({
+    i18nPrefix: 'zai_import',
+    isFocused: () => false,
+    onCredentialAdded: flows.recordCredentialAdded,
+    importKey: (apiKey) => zaiApi.importKey(apiKey),
+  });
+  const opencodeImport = useKeyImport({
+    i18nPrefix: 'opencode_import',
+    isFocused: () => false,
+    onCredentialAdded: flows.recordCredentialAdded,
+    importKey: (apiKey, baseUrl) => opencodeApi.importKey(apiKey, baseUrl),
   });
 
   const labelOf = (card: OAuthProviderCard) =>
@@ -220,6 +238,31 @@ export function OAuthPage() {
             index={regularCards.length + tileIndexOffset + 1}
             onOpen={openSiwc}
           />
+        </div>
+        <div className={styles.importGrid}>
+          <Collapsible label={t('zai_import.title')} defaultOpen={false}>
+            <KeyImportForm
+              i18nPrefix="zai_import"
+              dashboardUrl={ZAI_DASHBOARD_URL}
+              supportsBaseUrl={false}
+              state={zaiImport.state}
+              onApiKeyChange={zaiImport.setApiKey}
+              onBaseUrlChange={zaiImport.setBaseUrl}
+              onImport={() => void zaiImport.importCredential()}
+              onViewAuthFiles={viewAuthFiles}
+            />
+          </Collapsible>
+          <Collapsible label={t('opencode_import.title')} defaultOpen={false}>
+            <KeyImportForm
+              i18nPrefix="opencode_import"
+              supportsBaseUrl
+              state={opencodeImport.state}
+              onApiKeyChange={opencodeImport.setApiKey}
+              onBaseUrlChange={opencodeImport.setBaseUrl}
+              onImport={() => void opencodeImport.importCredential()}
+              onViewAuthFiles={viewAuthFiles}
+            />
+          </Collapsible>
         </div>
       </section>
 
