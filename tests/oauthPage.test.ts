@@ -19,9 +19,13 @@ import {
 } from '@/features/oauth/components/OAuthFlowDialog';
 import { VertexImportDialog } from '@/features/oauth/components/VertexImportDialog';
 import type { ProviderFlowState } from '@/features/oauth/hooks/useOAuthFlows';
-import { resolveCallbackUrl, XAI_CALLBACK_URL } from '@/features/oauth/callbackUrl';
+import { resolveCallbackUrl, XAI_CALLBACK_URL, ZAI_CALLBACK_URL } from '@/features/oauth/callbackUrl';
 import { resolveFlowView, splitAuthUrl } from '@/features/oauth/flowView';
-import { buildPluginOAuthProviderCards, OAUTH_PROVIDERS } from '@/features/oauth/providers';
+import {
+  buildPluginOAuthProviderCards,
+  CALLBACK_SUPPORTED,
+  OAUTH_PROVIDERS,
+} from '@/features/oauth/providers';
 import {
   KIMI_CHINESE_AFFILIATE_URL,
   KIMI_INTERNATIONAL_AFFILIATE_URL,
@@ -89,6 +93,31 @@ describe('manual callback input', () => {
     expect(resolveCallbackUrl('xai', 'abc123')).toBeNull();
     expect(resolveCallbackUrl('xai', 'code=abc123')).toBeNull();
     expect(resolveCallbackUrl('xai', '   ', 'st')).toBeNull();
+  });
+
+  test('passes zcode:// callback URLs through and assembles bare codes with state', () => {
+    const url = 'zcode://zai-auth/callback?code=c&state=s';
+    expect(resolveCallbackUrl('zai', url, 'other')).toBe(url);
+    const built = new URL(resolveCallbackUrl('zai', 'abc123', 'st-1')!);
+    expect(`${built.protocol}//${built.host}${built.pathname}`).toBe(ZAI_CALLBACK_URL);
+    expect(built.searchParams.get('code')).toBe('abc123');
+    expect(built.searchParams.get('state')).toBe('st-1');
+  });
+
+  test('refuses to invent a state for Z.AI', () => {
+    expect(resolveCallbackUrl('zai', 'abc123')).toBeNull();
+    expect(resolveCallbackUrl('zai', 'code=abc123')).toBeNull();
+    expect(resolveCallbackUrl('zai', '   ', 'st')).toBeNull();
+  });
+
+  test('registers the Z.AI browser-flow card with manual callback support', () => {
+    const zai = OAUTH_PROVIDERS.find((provider) => provider.id === 'zai');
+    expect(zai).toMatchObject({
+      kind: 'builtin',
+      flow: 'browser',
+      titleKey: 'auth_login.zai_oauth_title',
+    });
+    expect(CALLBACK_SUPPORTED.has('zai')).toBe(true);
   });
 });
 
