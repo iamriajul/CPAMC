@@ -16,6 +16,7 @@ import iconGrok from '@/assets/icons/grok.svg';
 import iconGrokDark from '@/assets/icons/grok-dark.svg';
 import iconDevin from '@/assets/icons/devin.svg';
 import iconDevinDark from '@/assets/icons/devin-dark.svg';
+import iconZai from '@/assets/icons/zai.svg';
 
 export type ThemedIcon = string | { light: string; dark: string };
 
@@ -116,6 +117,14 @@ export const OAUTH_PROVIDERS: BuiltInOAuthProviderCard[] = [
     icon: { light: iconDevin, dark: iconDevinDark },
     flow: 'browser',
   },
+  {
+    kind: 'builtin',
+    id: 'zai',
+    label: 'Z.AI',
+    titleKey: 'auth_login.zai_oauth_title',
+    icon: iconZai,
+    flow: 'browser',
+  },
 ];
 
 const BUILTIN_PROVIDER_IDS = new Set<string>(OAUTH_PROVIDERS.map((provider) => provider.id));
@@ -127,6 +136,7 @@ export const CALLBACK_SUPPORTED = new Set<string>([
   'antigravity',
   'xai',
   'devin',
+  'zai',
 ]);
 
 export const supportsManualCallback = (provider: OAuthProviderCard): boolean =>

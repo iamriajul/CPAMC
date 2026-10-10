@@ -38,3 +38,10 @@
   grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 10px;
 }
+
+/* 密钥导入卡：与磁贴网格同宽，纵向堆叠（密钥表单需要整行宽度）。 */
+.importGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

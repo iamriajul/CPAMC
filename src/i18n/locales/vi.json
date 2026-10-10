@@ -917,6 +917,7 @@
     "meta_oauth_title": "Muse (Meta) OAuth",
     "meta_oauth_button": "Đăng nhập bằng Muse",
     "meta_oauth_hint": "Mở liên kết ủy quyền và nhập mã thiết bị nếu được yêu cầu. File xác thực sẽ tự động được lưu sau khi ủy quyền.",
+    "meta_oauth_url_label": "Authorization URL:",
     "meta_open_link": "Mở liên kết",
     "meta_copy_link": "Sao chép liên kết",
     "meta_oauth_status_waiting": "Đang chờ xác thực...",

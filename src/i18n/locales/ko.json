@@ -864,6 +864,7 @@
     "meta_oauth_title": "Muse (Meta) OAuth",
     "meta_oauth_button": "Muse로 로그인",
     "meta_oauth_hint": "인증 링크를 열고 안내가 나타나면 기기 코드를 입력하세요. 인증이 완료되면 인증 파일이 자동으로 저장됩니다.",
+    "meta_oauth_url_label": "Authorization URL:",
     "meta_open_link": "링크 열기",
     "meta_copy_link": "링크 복사",
     "meta_oauth_status_waiting": "인증 대기 중...",

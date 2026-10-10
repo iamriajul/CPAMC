@@ -223,18 +223,23 @@ function CallbackStep({
   const hintId = useId();
   const feedbackId = useId();
   const isXai = providerId === 'xai';
+  const isZai = providerId === 'zai';
   const isDevin = providerId === 'devin';
   const disabled = !state.url || (isDevin && (state.cancelling || state.status !== 'waiting'));
   const hintKey = isXai
     ? 'auth_login.xai_callback_hint'
-    : isDevin
-      ? 'auth_login.devin_callback_hint'
-      : 'auth_login.oauth_callback_hint';
+    : isZai
+      ? 'auth_login.zai_callback_hint'
+      : isDevin
+        ? 'auth_login.devin_callback_hint'
+        : 'auth_login.oauth_callback_hint';
   const placeholderKey = isXai
     ? 'auth_login.xai_callback_placeholder'
-    : isDevin
-      ? 'auth_login.devin_callback_placeholder'
-      : 'auth_login.oauth_callback_placeholder';
+    : isZai
+      ? 'auth_login.zai_callback_placeholder'
+      : isDevin
+        ? 'auth_login.devin_callback_placeholder'
+        : 'auth_login.oauth_callback_placeholder';
 
   const feedback = state.callbackValidation
     ? { tone: 'error' as const, message: state.callbackValidation }
@@ -249,7 +254,13 @@ function CallbackStep({
 
   return (
     <Step
-      title={t(isXai ? 'auth_login.xai_callback_label' : 'auth_login.oauth_callback_label')}
+      title={t(
+        isXai
+          ? 'auth_login.xai_callback_label'
+          : isZai
+            ? 'auth_login.zai_callback_label'
+            : 'auth_login.oauth_callback_label'
+      )}
       titleFor={inputId}
       aside={<span className={styles.optional}>{t('auth_login.optional_step')}</span>}
     >
