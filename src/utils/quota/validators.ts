@@ -59,7 +59,9 @@ export const BUILT_IN_QUOTA_PROVIDERS: ReadonlySet<string> = new Set([
   'kimi',
   'copilot',
   'meta',
+  'opencode',
   'xai',
+  'zai',
 ]);
 
 /** v8 auth_files.go emits quota_plugin_id when the host selects a quota route. */
