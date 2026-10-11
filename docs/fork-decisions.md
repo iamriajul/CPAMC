@@ -32,13 +32,14 @@ OAuth gallery gains the Z.AI browser-flow card (zcode:// paste-back, same UX
 as the xAI manual flow) in the provider registry, plus inline Z.AI / OpenCode
 Go key-import cards (validated save via the backend import endpoints) under
 "other login methods". Quota page, auth-file cards, and timeline lanes cover
-both providers.
+both providers. Both providers are also in `BUILT_IN_QUOTA_PROVIDERS`, so a
+plugin advertising quota for them never shadows their built-in cards.
 
 ```bash
 grep -q "id: 'zai'" src/features/oauth/providers.ts
 grep -q "ZAI_CALLBACK_URL" src/features/oauth/callbackUrl.ts
 grep -q "opencode: opencodeQuota" src/features/quota/QuotaPage.tsx
-bun test tests/opencodeQuota.test.ts tests/zaiQuota.test.ts tests/oauthPage.test.ts
+bun test tests/opencodeQuota.test.ts tests/zaiQuota.test.ts tests/oauthPage.test.ts tests/pluginQuota.test.ts
 ```
 
 ## quota-page-map-satisfies
