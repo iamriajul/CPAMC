@@ -93,17 +93,15 @@ the ruleset normally rejects, so:
 Tag the queue tip on `main` (never a feature branch), then push the tag:
 
 ```bash
-git tag vA.B.9NN && git push origin vA.B.9NN
+git tag v<upstream-tag>-muse.<N> && git push origin v<upstream-tag>-muse.<N>
 ```
 
-`A.B` tracks the upstream tag the queue sits on; patch `9NN` (the 900
-series, e.g. `v1.23.905` on upstream `v1.23.1`) marks fork revisions.
-Upstream owns the low patch range, so never mint below `900` on a shared
-`A.B` line — if upstream's own patches ever approach `900`, roll the fork
-line forward to the next minor first. The `v*` tag build publishes
-`management.html` to the fork's GitHub Release; the proxy picks it up via
-`panel-github-repository`. Version bumps live in the tag — never land
-version churn as a separate queue commit.
+`<upstream-tag>` tracks the upstream tag the queue sits on (e.g. `v1.26.5-muse.1`
+on upstream `v1.26.5`). `<N>` is the next unused fork revision number for that
+upstream tag version (starting at 1). Upstream owns plain `v*` tags, so never
+mint in a colliding namespace. The `v*` tag build publishes `management.html`
+to the fork's GitHub Release; the proxy picks it up via `panel-github-repository`.
+Version bumps live in the tag — never land version churn as a separate queue commit.
 
 ## What not to do
 
