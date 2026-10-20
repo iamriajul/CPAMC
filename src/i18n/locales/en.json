@@ -267,7 +267,7 @@
     "cooldown_observed": "Snapshot at",
     "cooldown_note": "Local scheduling snapshot; remaining times are estimates. Expiry does not guarantee availability, quota recovery, or an automatic retry. Model names are internal state keys; backoff levels are not failure counts.",
     "cooldown_reset_button": "Clear cooldown",
-    "cooldown_reset_hint": "Clear this credential's local routing cooldown",
+    "cooldown_reset_hint": "Clear local routing cooldown for this credential",
     "cooldown_reset_title": "Clear credential cooldown?",
     "cooldown_reset_confirm": "Clear the local routing cooldown for “{{name}}”? This may make the credential eligible for another request immediately. It does not restore upstream quota.",
     "cooldown_reset_success": "Cooldown cleared for {{name}}.",
@@ -888,7 +888,6 @@
     "antigravity_oauth_status_error": "Authentication failed:",
     "antigravity_oauth_start_error": "Failed to start Antigravity OAuth:",
     "antigravity_oauth_polling_error": "Failed to check authentication status:",
-
     "device_code_label": "Device code:",
     "device_code_copy": "Copy device code",
     "kimi_ai_oauth_title": "Kimi International (kimi.ai)",
@@ -2403,7 +2402,7 @@
     "unsupported": "This backend does not support SIWC binding.",
     "expired": "The binding session expired. Please start over."
   },
-"opencode_quota": {
+  "opencode_quota": {
     "title": "OpenCode Quota",
     "empty_title": "No OpenCode Auth Files",
     "empty_desc": "Import an OpenCode Go key to view subscription usage.",
