@@ -59,17 +59,20 @@ grep -q "satisfies Record<QuotaProviderType" src/features/quota/QuotaPage.tsx
 bun run type-check
 ```
 
-## i18n-ko-vi-fork-keys
+## i18n-strict-locales-fork-keys
 
-**Fork-added English keys are mirrored into the Korean and Vietnamese locales**
+**Fork-added English keys are mirrored into strict-coverage locales (ko, tr, vi)**
 
-Upstream's `koreanLocale`/`vietnameseLocale` tests require every English key
-to exist in `ko.json`/`vi.json` with matching interpolation tokens. The
-fork's OpenCode/Z.AI panels, models.dev catalog panel, and web-search
-section add English keys, so the replay carries those keys into both files
-(English placeholder values until translated). Without them the upstream
-coverage tests fail.
+Upstream's `koreanLocale`, `turkishLocale`, and `vietnameseLocale` tests require
+every English key to exist in `ko.json`, `tr.json`, and `vi.json` with matching
+interpolation tokens. The fork's OpenCode/Z.AI panels, models.dev catalog panel,
+and web-search section add English keys, so the replay carries those keys into
+these files (English placeholder values until translated). Without them the
+upstream coverage tests fail.
+
+This originally covered Korean and Vietnamese (`i18n-ko-vi-fork-keys`);
+upstream added Turkish in v1.27.0 with the same full-key coverage requirement.
 
 ```bash
-bun test tests/koreanLocale.test.ts tests/vietnameseLocale.test.ts
+bun test tests/koreanLocale.test.ts tests/turkishLocale.test.ts tests/vietnameseLocale.test.ts
 ```
