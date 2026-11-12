@@ -1,12 +1,17 @@
 # Syncing official management-center
 
 This fork keeps a rebase queue shape: `main` is an upstream release tag plus
-one commit per fork change, with no merge commits of our own. A GitHub
-ruleset (`general-practices`, targeting the default branch) enforces it —
-merge commits and non-fast-forward pushes are rejected, and `pullfrog-approval`
-is a required check. Note the upstream tag itself may contain merge commits
-from upstream's own dev branch (e.g. `aba373a` inside v1.23.1); tag history
-is inherited as-is and the ruleset is evaluated only on what we push.
+one commit per fork change, with no merge commits of our own. Two GitHub
+rulesets target the default branch. `general-practices` requires a pull request
+(so a direct push is refused), linear history (so a merge commit is refused)
+and the `pullfrog-approval` check. `strict-pullfrog-approval` requires
+`pullfrog-approval`. Neither ruleset has a force-push rule, so the landing push
+below needs both temporarily disabled. Note the upstream tag itself may contain
+merge commits from upstream's own dev branch (e.g. `aba373a` inside v1.23.1). A sync
+also pushes the upstream commits between the old tag and the new one, so merges in
+that range are refused by linear history (for v1.27.4: `28182ef9`, `18906172`,
+`36083b08`), and the landing push needs the rulesets disabled. Merges below the
+new tag are inherited as-is; the verify step counts only merges above it.
 
 Track **stable release tags** (`v*`). `upstream/main` may move past the latest
 tag with unfinished work; never base fork work on an untagged tip.
