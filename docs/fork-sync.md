@@ -10,7 +10,8 @@ below needs both temporarily disabled. Note the upstream tag itself may contain
 merge commits from upstream's own dev branch (e.g. `aba373a` inside v1.23.1). A sync
 also pushes the upstream commits between the old tag and the new one, so merges in
 that range are refused by linear history (for v1.27.4: `28182ef9`, `18906172`,
-`36083b08`), and the landing push needs the rulesets disabled. Merges below the
+`36083b08`; for v1.28.0: `d0126752`, `2da3e263`, `b616482b`, `9494c5e9`,
+`4a605466`, `1e22a7fd`), and the landing push needs the rulesets disabled. Merges below the
 new tag are inherited as-is; the verify step counts only merges above it.
 
 Track **stable release tags** (`v*`). `upstream/main` may move past the latest
