@@ -61,18 +61,22 @@ bun run type-check
 
 ## i18n-strict-locales-fork-keys
 
-**Fork-added English keys are mirrored into strict-coverage locales (ko, tr, vi)**
+**Fork-added English keys are mirrored into every locale file**
 
-Upstream's `koreanLocale`, `turkishLocale`, and `vietnameseLocale` tests require
-every English key to exist in `ko.json`, `tr.json`, and `vi.json` with matching
-interpolation tokens. The fork's OpenCode/Z.AI panels, models.dev catalog panel,
-and web-search section add English keys, so the replay carries those keys into
-these files (English placeholder values until translated). Without them the
-upstream coverage tests fail.
+Upstream's `localeParity` test requires every locale in `LANGUAGE_ORDER` (ko,
+vi, tr, ru, zh-CN, zh-TW) to have the same keys as English, with nonempty text,
+matching interpolation tokens, and complete plural forms. Upstream added it in
+v1.29.1 and deleted the per-locale Korean and Vietnamese tests. The fork's
+OpenCode/Z.AI panels, models.dev catalog panel, and web-search section add
+English keys, so the replay carries those keys into every locale file. ko, vi and
+tr hold English placeholder text for them until they are translated; ru, zh-CN
+and zh-TW hold translations. Without the keys the parity test fails. Upstream's
+`turkishLocale` test still runs next to it.
 
-This originally covered Korean and Vietnamese (`i18n-ko-vi-fork-keys`);
-upstream added Turkish in v1.27.0 with the same full-key coverage requirement.
+Before v1.29.1 this section named separate per-locale tests. It began with Korean
+and Vietnamese (`i18n-ko-vi-fork-keys`); upstream added Turkish in v1.27.0 with
+the same full-key coverage requirement.
 
 ```bash
-bun test tests/koreanLocale.test.ts tests/turkishLocale.test.ts tests/vietnameseLocale.test.ts
+bun test tests/localeParity.test.ts tests/turkishLocale.test.ts
 ```
